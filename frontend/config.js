@@ -10,7 +10,7 @@
 // este arquivo nem fazer novo deploy.
 // ============================================================================
 
-const BACKEND_URL = 'https://SEU-BACKEND.onrender.com';
+const BACKEND_URL = 'https://trutec-1.onrender.com';
 
 // Não mexa daqui pra baixo -----------------------------------------------
 const _params = new URLSearchParams(window.location.search);
