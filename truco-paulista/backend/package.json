@@ -1,0 +1,20 @@
+{
+  "name": "truco-paulista-online",
+  "version": "1.0.0",
+  "description": "Truco Paulista multiplayer em tempo real com Node.js, Express e Socket.io",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Nada para compilar — projeto usa JS puro no frontend.'",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  },
+  "license": "MIT"
+}
