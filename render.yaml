@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: truco-paulista-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.20.4
+      - key: ALLOWED_ORIGINS
+        value: https://SEU-PROJETO.vercel.app
+    autoDeploy: true
