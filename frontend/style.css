@@ -386,15 +386,66 @@ button { font-family: inherit; cursor: pointer; }
   font-family: monospace;
   font-size: 1.4rem;
 }
-.waiting-players { margin: 20px 0; display: flex; flex-direction: column; gap: 8px; }
+/* A sala de espera agora mostra o avatar (o boneco que o jogador desenhou)
+   ao lado do nome, então o card fica maior que um lobby-card comum. */
+#screen-waiting .lobby-card {
+  width: min(560px, 94vw);
+}
+
+.waiting-players { margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
 .waiting-players .wp-row {
   background: rgba(0,0,0,0.25);
   padding: 10px 14px;
-  border-radius: 10px;
+  border-radius: 14px;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
   font-size: 0.9rem;
+  text-align: left;
+  transition: background 0.2s ease;
 }
+.waiting-players .wp-row-empty { background: rgba(0,0,0,0.12); }
+
+.wp-avatar {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff8f0;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+.wp-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.wp-avatar-empty {
+  opacity: 0.35;
+  box-shadow: none;
+}
+
+.wp-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.wp-name {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wp-team {
+  font-size: 0.78rem;
+  color: #fff8f0;
+  opacity: 0.75;
+}
+
 .waiting-hint { font-size: 0.8rem; color: #fff8f0; }
 
 /* ---------------------------------------------------------------- */

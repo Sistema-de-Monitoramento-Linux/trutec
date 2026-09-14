@@ -94,6 +94,14 @@ function currentName() {
   return v || `Jogador${Math.floor(Math.random() * 900 + 100)}`;
 }
 
+function getSavedCharacter() {
+  try {
+    return localStorage.getItem('trutec_meu_personagem') || null;
+  } catch (e) {
+    return null;
+  }
+}
+
 // ------------------------------------------------------------------
 // PAINEL: CRIAR PERSONAGEM (desenhar em cima do boneco)
 // ------------------------------------------------------------------
@@ -243,6 +251,12 @@ function currentName() {
     const previewImg = document.getElementById('character-preview-img');
     if (previewImg) previewImg.src = dataUrl;
 
+    // Se já estamos numa sala (esperando jogadores), avisa o backend
+    // pra atualizar o avatar em tempo real pros outros jogadores também.
+    if (myRoomCode) {
+      socket.emit('update_character', { character: dataUrl });
+    }
+
     saveMsg.textContent = 'Personagem salvo! ✅';
     setTimeout(() => { saveMsg.textContent = ''; }, 2500);
   });
@@ -275,7 +289,7 @@ function lobbyError(msg) {
 
 document.getElementById('btn-quick').addEventListener('click', () => {
   myName = currentName();
-  socket.emit('quick_join', { name: myName, mode: myMode }, (res) => {
+  socket.emit('quick_join', { name: myName, mode: myMode, character: getSavedCharacter() }, (res) => {
     if (!res.ok) return lobbyError(res.error);
     myRoomCode = res.code;
     showScreen('screen-waiting');
@@ -284,7 +298,7 @@ document.getElementById('btn-quick').addEventListener('click', () => {
 
 document.getElementById('btn-create').addEventListener('click', () => {
   myName = currentName();
-  socket.emit('create_room', { name: myName, mode: myMode, isPublic: false }, (res) => {
+  socket.emit('create_room', { name: myName, mode: myMode, isPublic: false, character: getSavedCharacter() }, (res) => {
     if (!res.ok) return lobbyError(res.error);
     myRoomCode = res.code;
     showScreen('screen-waiting');
@@ -295,7 +309,7 @@ document.getElementById('btn-join').addEventListener('click', () => {
   myName = currentName();
   const code = document.getElementById('input-code').value.trim();
   if (!code) return lobbyError('Digite o código da sala.');
-  socket.emit('join_room', { code, name: myName }, (res) => {
+  socket.emit('join_room', { code, name: myName, character: getSavedCharacter() }, (res) => {
     if (!res.ok) return lobbyError(res.error);
     myRoomCode = res.code;
     showScreen('screen-waiting');
@@ -318,9 +332,23 @@ socket.on('lobby_update', (lobby) => {
     const row = document.createElement('div');
     row.className = 'wp-row';
     if (p) {
-      row.innerHTML = `<span>${p.name}${p.connected ? '' : ' (saiu)'}</span><span>Time ${p.team + 1}</span>`;
+      const avatarSrc = p.character || 'assets/personagem.svg';
+      row.innerHTML = `
+        <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
+        <div class="wp-info">
+          <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}</span>
+          <span class="wp-team">Time ${p.team + 1}</span>
+        </div>
+      `;
     } else {
-      row.innerHTML = `<span style="opacity:.5">Aguardando…</span><span>—</span>`;
+      row.className += ' wp-row-empty';
+      row.innerHTML = `
+        <div class="wp-avatar wp-avatar-empty"><img src="assets/personagem.svg" alt="" draggable="false" /></div>
+        <div class="wp-info">
+          <span class="wp-name" style="opacity:.5">Aguardando…</span>
+          <span class="wp-team">—</span>
+        </div>
+      `;
     }
     wrap.appendChild(row);
   }
