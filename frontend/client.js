@@ -63,6 +63,7 @@ let myMode = '1v1';
 let myRoomCode = null;
 let mySeat = null;
 let myTeam = null;
+let myWaitingSeat = null; // meu assento na sala de espera (antes do jogo começar)
 let selectedCardId = null;
 let esconderAtivo = false;
 let latestState = null;
@@ -359,6 +360,7 @@ document.getElementById('btn-quick').addEventListener('click', () => {
   socket.emit('quick_join', { name: myName, mode: myMode, character: getSavedCharacter() }, (res) => {
     if (!res.ok) return lobbyError(res.error);
     myRoomCode = res.code;
+    myWaitingSeat = res.seat;
     showScreen('screen-waiting');
   });
 });
@@ -368,6 +370,7 @@ document.getElementById('btn-create').addEventListener('click', () => {
   socket.emit('create_room', { name: myName, mode: myMode, isPublic: false, character: getSavedCharacter() }, (res) => {
     if (!res.ok) return lobbyError(res.error);
     myRoomCode = res.code;
+    myWaitingSeat = res.seat;
     showScreen('screen-waiting');
   });
 });
@@ -379,6 +382,7 @@ document.getElementById('btn-join').addEventListener('click', () => {
   socket.emit('join_room', { code, name: myName, character: getSavedCharacter() }, (res) => {
     if (!res.ok) return lobbyError(res.error);
     myRoomCode = res.code;
+    myWaitingSeat = res.seat;
     showScreen('screen-waiting');
   });
 });
@@ -403,7 +407,7 @@ socket.on('lobby_update', (lobby) => {
       row.innerHTML = `
         <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
         <div class="wp-info">
-          <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}</span>
+          <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
           <span class="wp-team">Time ${p.team + 1}</span>
         </div>
       `;
@@ -419,6 +423,45 @@ socket.on('lobby_update', (lobby) => {
     }
     wrap.appendChild(row);
   }
+
+  updateStartButton(lobby);
+});
+
+// ------------------------------------------------------------------
+// Botão "Iniciar partida" (só o host, assento 0, vê e pode clicar)
+// ------------------------------------------------------------------
+function updateStartButton(lobby) {
+  const btn = document.getElementById('btn-start-game');
+  const hint = document.getElementById('waiting-hint');
+  const isHost = myWaitingSeat === 0;
+
+  btn.classList.toggle('hidden', !isHost);
+
+  if (isHost) {
+    btn.disabled = !lobby.canStart;
+    btn.textContent = lobby.canStart
+      ? 'Iniciar partida'
+      : `Aguardando jogadores… (${lobby.players.length}/${lobby.maxPlayers})`;
+    hint.textContent = lobby.canStart
+      ? 'A mesa está completa — quando quiser, aperte em Iniciar partida.'
+      : 'Aguardando mais jogadores entrarem na sala…';
+  } else {
+    hint.textContent = lobby.canStart
+      ? 'A mesa está completa. Aguardando o host iniciar a partida…'
+      : 'Aguardando jogadores…';
+  }
+}
+
+document.getElementById('btn-start-game').addEventListener('click', () => {
+  const btn = document.getElementById('btn-start-game');
+  btn.disabled = true;
+  socket.emit('start_game', (res) => {
+    if (!res || !res.ok) {
+      const el = document.getElementById('waiting-error');
+      if (el) el.textContent = (res && res.error) || 'Não foi possível iniciar a partida.';
+      btn.disabled = false;
+    }
+  });
 });
 
 // ------------------------------------------------------------------

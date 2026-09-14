@@ -178,7 +178,9 @@
       <h2>Sala <span id="waiting-code" class="room-code"></span></h2>
       <p class="tagline">Compartilhe o código com os amigos.</p>
       <div id="waiting-players" class="waiting-players"></div>
-      <p class="waiting-hint">Aguardando jogadores… a partida começa automaticamente ao completar a mesa.</p>
+      <p id="waiting-hint" class="waiting-hint">Aguardando jogadores…</p>
+      <button id="btn-start-game" class="btn btn-primary hidden" disabled>Iniciar partida</button>
+      <p id="waiting-error" class="error-text"></p>
       <button id="btn-leave-waiting" class="btn btn-ghost">Voltar</button>
     </div>
   </div>

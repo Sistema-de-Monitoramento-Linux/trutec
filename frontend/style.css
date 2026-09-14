@@ -439,6 +439,9 @@ button { font-family: inherit; cursor: pointer; }
 .btn-ghost { background: transparent; color: #fff8f0; margin-top: 16px; text-decoration: underline; }
 .btn-danger { background: var(--danger); color: white; box-shadow: 0 3px 0 #040303; }
 .btn:hover { filter: brightness(1.08); }
+.btn.hidden { display: none; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; filter: none; box-shadow: none; }
+#btn-start-game { width: 100%; margin-top: 14px; }
 
 .divider { display: flex; align-items: center; color: #9a9a9a; font-size: 0.9rem; margin: 2px 0; }
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.15); }

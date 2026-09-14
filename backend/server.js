@@ -181,6 +181,8 @@ class Room {
       isPublic: this.isPublic,
       maxPlayers: this.maxPlayers,
       started: this.started,
+      // Sala cheia e ainda não iniciada = pronta pro host apertar "Iniciar".
+      canStart: !this.started && this.players.length === this.maxPlayers,
       players: this.players.map(p => ({
         seat: p.seat, name: p.name, team: p.team, connected: p.connected, character: p.character || null
       }))
@@ -448,9 +450,9 @@ io.on('connection', (socket) => {
       const code = genRoomCode();
       const r = new Room(code, mode, !!isPublic, name);
       rooms.set(code, r);
-      joinRoomInternal(r, socket, name || 'Jogador', character);
+      const player = joinRoomInternal(r, socket, name || 'Jogador', character);
       currentRoomCode = code;
-      cb && cb({ ok: true, code });
+      cb && cb({ ok: true, code, seat: player.seat });
       io.to(code).emit('lobby_update', r.lobbyState());
     } catch (e) {
       cb && cb({ ok: false, error: e.message });
@@ -464,16 +466,12 @@ io.on('connection', (socket) => {
     if (r.players.length >= r.maxPlayers) return cb && cb({ ok: false, error: 'Sala cheia.' });
     if (r.started) return cb && cb({ ok: false, error: 'Partida já começou.' });
 
-    joinRoomInternal(r, socket, name || 'Jogador', character);
+    const player = joinRoomInternal(r, socket, name || 'Jogador', character);
     currentRoomCode = code;
-    cb && cb({ ok: true, code });
+    cb && cb({ ok: true, code, seat: player.seat });
     io.to(code).emit('lobby_update', r.lobbyState());
-
-    if (r.players.length === r.maxPlayers) {
-      r.startGame();
-      r.players.forEach(p => io.to(p.id).emit('game_start', r.redactedStateFor(p.seat)));
-      r.broadcastState(io);
-    }
+    // A partida não começa mais sozinha ao encher a mesa — o host (assento 0)
+    // aperta "Iniciar partida" quando quiser (ver evento 'start_game').
   });
 
   socket.on('update_character', ({ character }) => {
@@ -502,23 +500,35 @@ io.on('connection', (socket) => {
       r = new Room(code, mode, true, name);
       rooms.set(code, r);
     }
-    joinRoomInternal(r, socket, name || 'Jogador', character);
+    const player = joinRoomInternal(r, socket, name || 'Jogador', character);
     currentRoomCode = r.code;
-    cb && cb({ ok: true, code: r.code });
+    cb && cb({ ok: true, code: r.code, seat: player.seat });
     io.to(r.code).emit('lobby_update', r.lobbyState());
+    // Idem: sem auto-start, o host clica em "Iniciar partida".
+  });
 
-    if (r.players.length === r.maxPlayers) {
-      r.startGame();
-      r.players.forEach(p => io.to(p.id).emit('game_start', r.redactedStateFor(p.seat)));
-      r.broadcastState(io);
-    }
+  socket.on('start_game', (cb) => {
+    const r = room();
+    if (!r) return cb && cb({ ok: false, error: 'Sala não encontrada.' });
+    const player = r.playerBySocket(socket.id);
+    if (!player) return cb && cb({ ok: false, error: 'Você não está nesta sala.' });
+    if (player.seat !== 0) return cb && cb({ ok: false, error: 'Só o host pode iniciar a partida.' });
+    if (r.started) return cb && cb({ ok: false, error: 'A partida já começou.' });
+    if (r.players.length < r.maxPlayers) return cb && cb({ ok: false, error: 'Aguardando mais jogadores entrarem.' });
+
+    r.startGame();
+    r.players.forEach(p => io.to(p.id).emit('game_start', r.redactedStateFor(p.seat)));
+    r.broadcastState(io);
+    cb && cb({ ok: true });
   });
 
   function joinRoomInternal(r, socket, name, character) {
     const seat = r.players.length;
     const team = r.seatTeam(seat);
-    r.players.push({ id: socket.id, name, seat, team, connected: true, hand: [], character: sanitizeCharacter(character) });
+    const player = { id: socket.id, name, seat, team, connected: true, hand: [], character: sanitizeCharacter(character) };
+    r.players.push(player);
     socket.join(r.code);
+    return player;
   }
 
   socket.on('play_card', ({ cardId, hidden }) => {
