@@ -169,20 +169,6 @@ button { font-family: inherit; cursor: pointer; }
 .score-value { font-size: 1.5rem; color: var(--gold-bright); }
 .score-vs { color: #6f8d76; font-size: 0.8rem; }
 
-.vira-box { display: flex; align-items: center; gap: 8px; }
-.vira-label { font-size: 0.65rem; color: #b9c9bb; text-transform: uppercase; }
-
-.mini-card {
-  width: 34px; height: 48px;
-  background: white;
-  border-radius: 5px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 0.85rem;
-  color: var(--ink);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-}
-.mini-card.red { color: var(--red); }
-
 .stake-box {
   background: var(--gold);
   color: #21160a;
@@ -194,6 +180,26 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: 0.5px;
 }
 
+/* Vira, agora exibida no meio da mesa junto às cartas jogadas */
+.vira-display { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.vira-label {
+  font-size: 0.7rem;
+  color: var(--gold-bright);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+.mini-card {
+  width: 62px; height: 88px;
+  background: white;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1.3rem;
+  color: var(--ink);
+  box-shadow: 0 0 0 2px var(--gold-bright), 0 4px 12px rgba(0,0,0,0.5);
+}
+.mini-card.red { color: var(--red); }
+
 .felt {
   flex: 1;
   position: relative;
@@ -201,12 +207,13 @@ button { font-family: inherit; cursor: pointer; }
     radial-gradient(ellipse at center, var(--felt-light) 0%, var(--felt) 55%, var(--felt-dark) 100%);
   border-top: 6px solid #08210f;
   overflow: hidden;
+  min-height: 0;
 }
 .felt::before {
   content: "";
-  position: absolute; inset: 14px;
-  border: 2px solid rgba(216,178,94,0.25);
-  border-radius: 30px;
+  position: absolute; inset: 20px;
+  border: 3px solid rgba(216,178,94,0.3);
+  border-radius: 40px;
   pointer-events: none;
 }
 
@@ -252,7 +259,12 @@ button { font-family: inherit; cursor: pointer; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 18px;
+}
+.center-row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
 }
 .table-cards {
   display: grid;
@@ -440,7 +452,7 @@ button { font-family: inherit; cursor: pointer; }
 @media (min-width: 900px) {
   .table-wrap { max-width: none; margin: 0; }
 
-  /* 3 colunas: ações | mesa | chat */
+  /* 3 colunas simétricas: ações | mesa (centralizada de verdade) | chat */
   .game-layout { flex-direction: row; }
   .game-layout .actions-bar { order: 0; }
   .game-layout .felt-wrap { order: 1; }
@@ -448,26 +460,30 @@ button { font-family: inherit; cursor: pointer; }
 
   .actions-bar {
     flex-direction: column;
-    width: 150px;
+    width: clamp(190px, 15vw, 240px);
     flex-shrink: 0;
     overflow-x: visible;
     overflow-y: auto;
-    justify-content: flex-start;
-    gap: 12px;
-    padding: 20px 14px;
+    justify-content: center;
+    gap: 14px;
+    padding: 20px 16px;
   }
   .action-btn {
     width: 100%;
-    padding: 18px 10px;
-    font-size: 0.95rem;
+    padding: 20px 10px;
+    font-size: 1rem;
   }
 
-  /* chat sempre visível como coluna, ignora o toggle mobile */
+  .felt-wrap { flex: 1; min-width: 0; }
+  .felt { min-height: 520px; }
+
+  /* chat sempre visível como coluna, com a MESMA largura da barra de ações,
+     pra manter o campo de fato centralizado na tela */
   .chat-panel,
   .chat-panel.hidden {
     display: flex;
     position: static;
-    width: 320px;
+    width: clamp(190px, 15vw, 240px);
     height: auto;
     flex-shrink: 0;
     border-radius: 0;

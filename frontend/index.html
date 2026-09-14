@@ -55,16 +55,12 @@
   <div id="screen-game" class="screen">
     <div class="table-wrap">
 
-      <!-- topo: placar e vira -->
+      <!-- topo: placar -->
       <div class="hud-top">
         <div class="score-box">
           <div class="score-team score-a"><span class="score-label" id="label-team-a">Nós</span><span class="score-value" id="score-a">0</span></div>
           <div class="score-vs">x</div>
           <div class="score-team score-b"><span class="score-label" id="label-team-b">Eles</span><span class="score-value" id="score-b">0</span></div>
-        </div>
-        <div class="vira-box">
-          <div class="vira-label">Vira</div>
-          <div id="vira-card" class="mini-card"></div>
         </div>
         <div class="stake-box">
           <span id="stake-label">valendo 1</span>
@@ -101,7 +97,13 @@
             </div>
 
             <div class="center-area">
-              <div id="table-cards" class="table-cards"></div>
+              <div class="center-row">
+                <div class="vira-display">
+                  <div class="vira-label">Vira</div>
+                  <div id="vira-card" class="mini-card"></div>
+                </div>
+                <div id="table-cards" class="table-cards"></div>
+              </div>
               <div id="banner" class="banner"></div>
             </div>
 
