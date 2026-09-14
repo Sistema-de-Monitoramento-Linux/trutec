@@ -26,6 +26,9 @@
   --panel: #050401;
   --wood: #040303;
   --wood-light: #2541b2;
+  --wood-brown: #6b4326;
+  --wood-brown-light: #8a5a34;
+  --wood-brown-dark: #402710;
   --radius: 14px;
   font-family: 'Coolvetica', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
@@ -715,7 +718,24 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
 }
-.game-layout .felt-wrap { order: 1; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.game-layout .felt-wrap {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  /* moldura de "madeira" ao redor do feltro, pra dar sensação de
+     ambiente real (uma mesinha de verdade) em vez de tela lisa */
+  background:
+    linear-gradient(rgba(0,0,0,0.12), rgba(0,0,0,0.12)),
+    repeating-linear-gradient(90deg,
+      var(--wood-brown-light) 0px, var(--wood-brown) 22px,
+      var(--wood-brown-dark) 26px, var(--wood-brown) 30px,
+      var(--wood-brown-light) 52px);
+  padding: 12px;
+  border-radius: 26px;
+  overflow: hidden;
+}
 .game-layout .actions-bar { order: 2; }
 .game-layout .chat-panel { order: 3; }
 
@@ -724,7 +744,7 @@ button { font-family: inherit; cursor: pointer; }
   align-items: center;
   justify-content: space-between;
   padding: 10px 18px 10px 82px;
-  background: rgba(0,0,0,0.45);
+  background: linear-gradient(rgba(45,26,13,0.55), rgba(45,26,13,0.4));
   border-bottom: 1px solid rgba(255,255,255,0.25);
   z-index: 5;
 }
@@ -806,10 +826,12 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
   background:
     var(--felt);
+  border-radius: 18px;
   box-shadow:
     inset 0 6px 14px rgba(0,0,0,0.45),
     inset 0 0 90px rgba(0,0,0,0.55),
-    inset 0 0 24px rgba(0,0,0,0.4);
+    inset 0 0 24px rgba(0,0,0,0.4),
+    0 8px 22px rgba(0,0,0,0.5);
   overflow: visible;
   min-height: 0;
   perspective: 1200px;
@@ -865,14 +887,14 @@ button { font-family: inherit; cursor: pointer; }
 /* ------------------------------------------------------------------ */
 .seat-figure {
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 92px;
+  height: 92px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle, var(--felt-dark) 0%, rgba(8,27,64,0) 72%);
-  box-shadow: 0 0 0 14px rgba(0,0,0,0.22), 0 6px 14px rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 16px rgba(0,0,0,0.22), 0 6px 14px rgba(0,0,0,0.5);
   transition: box-shadow .25s ease, transform .25s ease;
 }
 
@@ -894,18 +916,23 @@ button { font-family: inherit; cursor: pointer; }
 .seat-left.active-seat .seat-figure,
 .seat-right.active-seat .seat-figure {
   transform: scale(1.08);
-  box-shadow: 0 0 0 14px rgba(0,0,0,0.22), 0 0 0 3px var(--gold-bright), 0 0 18px rgba(255,248,240,0.7), 0 6px 14px rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 16px rgba(0,0,0,0.22), 0 0 0 3px var(--gold-bright), 0 0 18px rgba(255,248,240,0.7), 0 6px 14px rgba(0,0,0,0.5);
 }
 
-/* Meu avatar: um pouco maior, em primeiro plano. */
+/* Meu avatar: maior ainda, em primeiro plano. */
 .seat-figure-me {
-  width: 88px;
-  height: 88px;
+  width: 130px;
+  height: 130px;
 }
 
 @media (max-width: 720px) {
-  .seat-figure { width: 48px; height: 48px; }
-  .seat-figure-me { width: 68px; height: 68px; }
+  .seat-figure { width: 66px; height: 66px; box-shadow: 0 0 0 11px rgba(0,0,0,0.22), 0 6px 14px rgba(0,0,0,0.5); }
+  .seat-top.active-seat .seat-figure,
+  .seat-left.active-seat .seat-figure,
+  .seat-right.active-seat .seat-figure {
+    box-shadow: 0 0 0 11px rgba(0,0,0,0.22), 0 0 0 3px var(--gold-bright), 0 0 18px rgba(255,248,240,0.7), 0 6px 14px rgba(0,0,0,0.5);
+  }
+  .seat-figure-me { width: 92px; height: 92px; }
 }
 
 /* Mãos dos oponentes: leque pequeno e simples, sem inclinação 3D — a
@@ -973,6 +1000,8 @@ button { font-family: inherit; cursor: pointer; }
   background: radial-gradient(circle at 40% 32%, var(--felt-light) 0%, var(--felt) 55%, var(--felt-dark) 100%);
   border: 2px solid rgba(255,255,255,0.45);
   box-shadow:
+    0 0 0 8px var(--wood-brown),
+    0 0 0 11px var(--wood-brown-dark),
     0 32px 60px rgba(0,0,0,0.65),
     inset 0 3px 0 rgba(255,255,255,0.18),
     inset 0 0 40px rgba(0,0,0,0.4);
@@ -1145,7 +1174,7 @@ button { font-family: inherit; cursor: pointer; }
   gap: 6px;
   padding: 8px 10px 12px;
   overflow-x: auto;
-  background: rgba(0,0,0,0.35);
+  background: linear-gradient(rgba(45,26,13,0.45), rgba(45,26,13,0.35));
   border-top: 1px solid rgba(255,255,255,0.2);
 }
 .action-btn {
