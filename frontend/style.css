@@ -92,16 +92,16 @@ button { font-family: inherit; cursor: pointer; }
 
 .character-preview-card {
   position: absolute;
-  top: 50%;
+  bottom: 7vh;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 }
 
 .lobby-stack {
   position: absolute;
-  top: 50%;
+  bottom: 7vh;
   left: clamp(12px, 3vw, 48px);
-  transform: translateY(-50%);
+  transform: none;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,9 +110,10 @@ button { font-family: inherit; cursor: pointer; }
   max-height: 100%;
 }
 
-/* Em telas estreitas não dá pra encaixar os dois hud lado a lado
-   fixados nas pontas — volta pro empilhamento simples e centralizado. */
-@media (max-width: 900px) {
+/* Em telas estreitas (ou janelas menores) não dá pra encaixar os dois
+   hud lado a lado fixados nas pontas sem colidir — volta pro
+   empilhamento simples e centralizado. */
+@media (max-width: 1200px) {
   .lobby-row {
     position: static;
     height: auto;
