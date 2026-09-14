@@ -1,21 +1,33 @@
+@font-face {
+  font-family: 'Coolvetica';
+  /* Coolvetica não é uma fonte de sistema/Google Fonts — coloque os arquivos
+     da fonte em assets/fonts/ (coolvetica.woff2 / .woff / .ttf) pra ela carregar. */
+  src: url('assets/fonts/coolvetica.woff2') format('woff2'),
+       url('assets/fonts/coolvetica.woff') format('woff'),
+       url('assets/fonts/coolvetica.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --felt-dark: #072a19;
-  --felt: #0f5132;
-  --felt-light: #1a7a44;
-  --felt-highlight: #23935280;
-  --gold: #d8b25e;
-  --gold-bright: #f0cd7c;
-  --gold-dim: #a8863f;
-  --cream: #f4ecd8;
-  --ink: #1b1410;
-  --red: #b3372e;
-  --danger: #c0392b;
-  --danger-bright: #e5544a;
-  --panel: #123c28;
-  --wood: #3c2414;
-  --wood-light: #6b4226;
+  --felt-dark: #050505;
+  --felt: #141414;
+  --felt-light: #2b2b2b;
+  --felt-highlight: #ffffff33;
+  --gold: #d9d9d9;
+  --gold-bright: #ffffff;
+  --gold-dim: #a8a8a8;
+  --cream: #f2f2f2;
+  --ink: #0a0a0a;
+  --red: #0a0a0a;
+  --danger: #000000;
+  --danger-bright: #2e2e2e;
+  --panel: #161616;
+  --wood: #050505;
+  --wood-light: #2b2b2b;
   --radius: 14px;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Coolvetica', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -23,7 +35,7 @@
 html, body {
   margin: 0;
   height: 100%;
-  background: radial-gradient(ellipse at center, #0d4a2a 0%, #06210f 100%);
+  background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
   color: var(--cream);
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -44,8 +56,8 @@ button { font-family: inherit; cursor: pointer; }
 .screen.active { display: flex; }
 
 .lobby-card {
-  background: linear-gradient(180deg, #163f28, #0c2a1a);
-  border: 1px solid rgba(216, 178, 94, 0.35);
+  background: linear-gradient(180deg, #1a1a1a, #050505);
+  border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
   padding: 34px 30px;
   width: min(420px, 92vw);
@@ -53,18 +65,22 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
 }
 
-.logo {
-  font-size: 2.2rem;
-  margin: 0 0 4px;
-  color: var(--gold-bright);
-  letter-spacing: 0.5px;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+.site-logo {
+  display: block;
+  width: min(420px, 82vw);
+  margin: 0 auto 6px;
+  animation: floatLogo 6s ease-in-out infinite;
 }
-.logo span { color: var(--cream); font-weight: 300; }
-.tagline { color: #b9c9bb; margin: 0 0 22px; font-size: 0.95rem; }
+.tagline { color: #cfcfcf; margin: 0 0 22px; font-size: 0.95rem; }
+
+@keyframes floatLogo {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-14px); }
+  100% { transform: translateY(0); }
+}
 
 .field { text-align: left; margin-bottom: 18px; }
-.field label { display: block; font-size: 0.8rem; color: #9fc0a8; margin-bottom: 6px; }
+.field label { display: block; font-size: 0.8rem; color: #b5b5b5; margin-bottom: 6px; }
 .field input, .join-row input {
   width: 100%;
   padding: 12px 14px;
@@ -87,12 +103,12 @@ button { font-family: inherit; cursor: pointer; }
   padding: 10px;
   border: none;
   background: transparent;
-  color: #9fc0a8;
+  color: #b5b5b5;
   border-radius: 8px;
   font-weight: 600;
   transition: all .15s;
 }
-.mode-btn.active { background: var(--gold); color: #1b1410; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
+.mode-btn.active { background: var(--gold); color: #0a0a0a; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
 
 .lobby-actions { display: flex; flex-direction: column; gap: 12px; }
 
@@ -107,7 +123,7 @@ button { font-family: inherit; cursor: pointer; }
 .btn:active { transform: translateY(1px) scale(0.98); }
 .btn-primary {
   background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-  color: #21160a;
+  color: #0a0a0a;
   box-shadow: 0 3px 0 var(--gold-dim), 0 8px 16px rgba(0,0,0,0.35);
 }
 .btn-secondary {
@@ -116,11 +132,11 @@ button { font-family: inherit; cursor: pointer; }
   border: 1px solid rgba(255,255,255,0.2);
   box-shadow: 0 3px 0 rgba(0,0,0,0.3);
 }
-.btn-ghost { background: transparent; color: #9fc0a8; margin-top: 16px; text-decoration: underline; }
-.btn-danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #7a231c; }
+.btn-ghost { background: transparent; color: #b5b5b5; margin-top: 16px; text-decoration: underline; }
+.btn-danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #000000; }
 .btn:hover { filter: brightness(1.08); }
 
-.divider { display: flex; align-items: center; color: #6f8d76; font-size: 0.8rem; margin: 4px 0; }
+.divider { display: flex; align-items: center; color: #8a8a8a; font-size: 0.8rem; margin: 4px 0; }
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
 .divider span { padding: 0 10px; }
 
@@ -128,7 +144,7 @@ button { font-family: inherit; cursor: pointer; }
 .join-row input { text-transform: uppercase; text-align: center; letter-spacing: 3px; }
 .join-row .btn { flex-shrink: 0; }
 
-.error-text { color: #ff8b7a; min-height: 20px; margin-top: 12px; font-size: 0.85rem; }
+.error-text { color: #1a1a1a; min-height: 20px; margin-top: 12px; font-size: 0.85rem; }
 
 .room-code {
   color: var(--gold-bright);
@@ -145,7 +161,7 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: space-between;
   font-size: 0.9rem;
 }
-.waiting-hint { font-size: 0.8rem; color: #8fae96; }
+.waiting-hint { font-size: 0.8rem; color: #9a9a9a; }
 
 /* ---------------------------------------------------------------- */
 /* Mesa de jogo                                                       */
@@ -174,22 +190,22 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: space-between;
   padding: 10px 18px 10px 82px;
   background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.3));
-  border-bottom: 1px solid rgba(216,178,94,0.25);
+  border-bottom: 1px solid rgba(255,255,255,0.25);
   z-index: 5;
 }
 .score-box { display: flex; align-items: center; gap: 10px; font-weight: 700; }
 .score-team { display: flex; flex-direction: column; align-items: center; min-width: 46px; }
-.score-label { font-size: 0.6rem; color: #b9c9bb; text-transform: uppercase; letter-spacing: 0.5px; }
+.score-label { font-size: 0.6rem; color: #cfcfcf; text-transform: uppercase; letter-spacing: 0.5px; }
 .score-value {
   font-size: 1.6rem;
   color: var(--gold-bright);
   text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
-.score-vs { color: #6f8d76; font-size: 0.8rem; }
+.score-vs { color: #8a8a8a; font-size: 0.8rem; }
 
 .stake-box {
   background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-  color: #21160a;
+  color: #0a0a0a;
   padding: 7px 16px;
   border-radius: 20px;
   font-weight: 800;
@@ -217,7 +233,7 @@ button { font-family: inherit; cursor: pointer; }
   top: 0; left: 0;
   width: 58px; height: 82px;
   border-radius: 8px;
-  background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
+  background: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 4px, #050505 4px, #050505 8px);
   border: 1px solid rgba(255,255,255,0.3);
   box-shadow: 0 3px 8px rgba(0,0,0,0.4);
 }
@@ -263,9 +279,9 @@ button { font-family: inherit; cursor: pointer; }
 .felt::before {
   content: "";
   position: absolute; inset: 18px;
-  border: 3px solid rgba(216,178,94,0.32);
+  border: 3px solid rgba(255,255,255,0.32);
   border-radius: 40px;
-  box-shadow: 0 0 18px rgba(216,178,94,0.12) inset;
+  box-shadow: 0 0 18px rgba(255,255,255,0.12) inset;
   pointer-events: none;
 }
 .felt::after {
@@ -300,7 +316,7 @@ button { font-family: inherit; cursor: pointer; }
 .seat-name.me { color: var(--gold-bright); font-weight: 700; }
 .seat-name.active-turn {
   outline: 2px solid var(--gold-bright);
-  box-shadow: 0 0 12px rgba(240,205,124,0.6);
+  box-shadow: 0 0 12px rgba(255,255,255,0.6);
 }
 
 /* Mãos dos oponentes em 3D real — cada lado inclinado no eixo certo,
@@ -310,7 +326,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 58px; height: 82px;
   margin-left: -28px;
   border-radius: 6px;
-  background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
+  background: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 4px, #050505 4px, #050505 8px);
   border: 1px solid rgba(255,255,255,0.4);
   box-shadow: 0 8px 14px rgba(0,0,0,0.5);
   transition: transform .5s cubic-bezier(.34, 1.56, .64, 1), box-shadow .4s ease;
@@ -345,7 +361,7 @@ button { font-family: inherit; cursor: pointer; }
 .seat-left .opp-hand.active-turn .card-back,
 .seat-right .opp-hand.active-turn .card-back {
   transform: rotateX(0deg) rotateY(0deg) translateY(-10px) scale(1.08);
-  box-shadow: 0 14px 26px rgba(0,0,0,0.55), 0 0 0 2px rgba(240,205,124,0.6);
+  box-shadow: 0 14px 26px rgba(0,0,0,0.55), 0 0 0 2px rgba(255,255,255,0.6);
 }
 
 .center-area {
@@ -378,7 +394,7 @@ button { font-family: inherit; cursor: pointer; }
   inset: -22px;
   border-radius: 50%;
   background: radial-gradient(ellipse at 38% 30%, var(--felt-light) 0%, var(--felt) 55%, var(--felt-dark) 100%);
-  border: 2px solid rgba(216,178,94,0.45);
+  border: 2px solid rgba(255,255,255,0.45);
   box-shadow:
     0 32px 60px rgba(0,0,0,0.65),
     inset 0 3px 0 rgba(255,255,255,0.18),
@@ -418,10 +434,10 @@ button { font-family: inherit; cursor: pointer; }
   text-shadow: 0 2px 6px rgba(0,0,0,0.8);
   text-align: center;
   font-size: 1.15rem;
-  background: rgba(6, 20, 12, 0.82);
+  background: rgba(10,10,10,0.82);
   padding: 14px 26px;
   border-radius: 14px;
-  border: 1px solid rgba(216,178,94,0.45);
+  border: 1px solid rgba(255,255,255,0.45);
   box-shadow: 0 20px 46px rgba(0,0,0,0.55);
   max-width: min(440px, 86vw);
   opacity: 0;
@@ -463,10 +479,10 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow:
     0 0 0 2px var(--gold-bright),
     0 2px 3px rgba(0,0,0,0.15),
-    0 8px 18px rgba(216,178,94,0.35);
+    0 8px 18px rgba(255,255,255,0.35);
 }
 .card.facedown {
-  background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
+  background: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 4px, #050505 4px, #050505 8px);
 }
 
 /* índices de canto, tipo carta de baralho de verdade */
@@ -540,7 +556,7 @@ button { font-family: inherit; cursor: pointer; }
 .my-hand .card.disabled::after {
   content: "";
   position: absolute; inset: 0;
-  background: rgba(6, 20, 12, 0.28);
+  background: rgba(10,10,10,0.28);
   border-radius: inherit;
 }
 
@@ -550,7 +566,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: 8px 10px 12px;
   overflow-x: auto;
   background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45));
-  border-top: 1px solid rgba(216,178,94,0.2);
+  border-top: 1px solid rgba(255,255,255,0.2);
 }
 .action-btn {
   flex-shrink: 0;
@@ -558,7 +574,7 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 10px;
   border: none;
   background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-  color: #21160a;
+  color: #0a0a0a;
   font-weight: 800;
   font-size: 0.8rem;
   letter-spacing: 0.5px;
@@ -567,10 +583,10 @@ button { font-family: inherit; cursor: pointer; }
   transition: opacity .15s, transform .1s, box-shadow .1s;
 }
 .action-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--gold-dim), 0 2px 4px rgba(0,0,0,0.3); }
-.action-btn.danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #7a231c, 0 5px 10px rgba(0,0,0,0.35); }
+.action-btn.danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #000000, 0 5px 10px rgba(0,0,0,0.35); }
 .action-btn.icon { background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)); color: var(--cream); box-shadow: 0 3px 0 rgba(0,0,0,0.3); }
 .action-btn:disabled { opacity: 0.35; pointer-events: none; box-shadow: none; transform: none; }
-.action-btn.esconder-active { outline: 2px solid var(--gold-bright); box-shadow: 0 0 12px rgba(240,205,124,0.7); }
+.action-btn.esconder-active { outline: 2px solid var(--gold-bright); box-shadow: 0 0 12px rgba(255,255,255,0.7); }
 
 /* botão de sair da sala — fixo no canto superior esquerdo da tela */
 .exit-room-btn {
@@ -601,7 +617,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .call-overlay.hidden { display: none; }
 .call-box {
-  background: linear-gradient(180deg, #16452c, var(--panel));
+  background: linear-gradient(180deg, #1a1a1a, var(--panel));
   border: 1px solid var(--gold);
   border-radius: 16px;
   padding: 24px;
@@ -621,8 +637,8 @@ button { font-family: inherit; cursor: pointer; }
   right: 10px; bottom: 90px;
   width: min(280px, calc(100vw - 20px));
   height: 320px;
-  background: linear-gradient(180deg, rgba(18,45,29,0.97), rgba(6,20,12,0.97));
-  border: 1px solid rgba(216,178,94,0.4);
+  background: linear-gradient(180deg, rgba(20,20,20,0.97), rgba(10,10,10,0.97));
+  border: 1px solid rgba(255,255,255,0.4);
   border-radius: 14px;
   display: flex;
   flex-direction: column;
@@ -637,7 +653,7 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 800;
   color: var(--gold-bright);
   background: rgba(0,0,0,0.3);
-  border-bottom: 1px solid rgba(216,178,94,0.25);
+  border-bottom: 1px solid rgba(255,255,255,0.25);
   letter-spacing: 0.3px;
 }
 .chat-messages { flex: 1; overflow-y: auto; padding: 10px; font-size: 0.8rem; }
@@ -656,11 +672,11 @@ button { font-family: inherit; cursor: pointer; }
 .chat-input-row input {
   flex: 1; min-width: 0; border: none; background: rgba(0,0,0,0.2); color: var(--cream); padding: 10px;
 }
-.chat-input-row input::placeholder { color: rgba(244,236,216,0.45); }
+.chat-input-row input::placeholder { color: rgba(240,240,240,0.45); }
 .chat-input-row button {
   flex-shrink: 0;
   background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-  border: none; padding: 0 14px; font-weight: 700; color: #21160a;
+  border: none; padding: 0 14px; font-weight: 700; color: #0a0a0a;
 }
 
 #emoji-layer {
@@ -720,7 +736,7 @@ button { font-family: inherit; cursor: pointer; }
     gap: 14px;
     padding: 20px 16px;
     border-top: none;
-    border-right: 1px solid rgba(216,178,94,0.2);
+    border-right: 1px solid rgba(255,255,255,0.2);
   }
   .action-btn {
     width: 100%;
@@ -740,7 +756,7 @@ button { font-family: inherit; cursor: pointer; }
     flex-shrink: 0;
     border-radius: 0;
     border: none;
-    border-left: 1px solid rgba(216,178,94,0.3);
+    border-left: 1px solid rgba(255,255,255,0.3);
     box-shadow: none;
   }
   #btn-toggle-chat { display: none; }
