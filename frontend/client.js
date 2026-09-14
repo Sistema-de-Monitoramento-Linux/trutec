@@ -203,20 +203,35 @@ function currentName() {
       console.warn('Não foi possível salvar no localStorage:', e);
     }
 
+    // Atualiza a prévia grande do personagem lá no lobby.
+    const previewImg = document.getElementById('character-preview-img');
+    if (previewImg) previewImg.src = dataUrl;
+
     saveMsg.textContent = 'Personagem salvo! ✅';
     setTimeout(() => { saveMsg.textContent = ''; }, 2500);
   });
 
-  // Carrega um personagem salvo anteriormente, se existir.
+  // Carrega um personagem salvo anteriormente, se existir, e mostra na prévia do lobby.
   try {
     const saved = localStorage.getItem('trutec_meu_personagem');
     if (saved) {
-      // Só restaura a camada de desenho por cima do boneco base atual,
-      // então deixamos o canvas limpo e mostramos o resultado salvo como referência.
       saveMsg.textContent = 'Você já tem um personagem salvo.';
+      const previewImg = document.getElementById('character-preview-img');
+      if (previewImg) previewImg.src = saved;
     }
   } catch (e) { /* localStorage indisponível, ignora */ }
 })();
+
+// ------------------------------------------------------------------
+// Abrir/fechar a tela de edição do personagem a partir do lobby
+// ------------------------------------------------------------------
+document.getElementById('btn-open-character-editor').addEventListener('click', () => {
+  showScreen('screen-character-editor');
+});
+
+document.getElementById('btn-close-character-editor').addEventListener('click', () => {
+  showScreen('screen-lobby');
+});
 
 function lobbyError(msg) {
   document.getElementById('lobby-error').textContent = msg || '';

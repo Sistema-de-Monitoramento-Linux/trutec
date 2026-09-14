@@ -1,10 +1,8 @@
 @font-face {
   font-family: 'Coolvetica';
-  /* Coolvetica não é uma fonte de sistema/Google Fonts — coloque os arquivos
-     da fonte em assets/fonts/ (coolvetica.woff2 / .woff / .ttf) pra ela carregar. */
-  src: url('assets/fonts/coolvetica.woff2') format('woff2'),
-       url('assets/fonts/coolvetica.woff') format('woff'),
-       url('assets/fonts/coolvetica.ttf') format('truetype');
+  /* Coolvetica não é uma fonte de sistema/Google Fonts — o arquivo
+     coolvetica.woff2 fica na raiz do projeto, junto dos outros arquivos. */
+  src: url('coolvetica.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -125,24 +123,57 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* ---------------------------------------------------------------- */
-/* Painel: crie seu personagem                                        */
+/* Card (lobby): preview grande do personagem + botão "editar"         */
+/* ---------------------------------------------------------------- */
+.character-preview-card {
+  background: linear-gradient(180deg, #1a1a1a, #050505);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 20px;
+  padding: 18px 22px 22px;
+  width: min(360px, 92vw);
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
+}
+
+.character-preview-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 46vh;
+  margin: 10px auto 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.character-preview-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.character-edit-btn { width: 100%; }
+
+/* ---------------------------------------------------------------- */
+/* Tela: editar personagem (canvas + ferramentas de desenho)          */
 /* ---------------------------------------------------------------- */
 .character-panel {
   background: linear-gradient(180deg, #1a1a1a, #050505);
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
   padding: 16px 20px 18px;
-  width: min(300px, 92vw);
+  width: min(360px, 92vw);
   text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
 }
+.character-back-btn { display: block; width: 100%; margin-top: 10px; }
 .character-title { margin: 0 0 4px; font-size: 1.15rem; color: var(--cream); }
 .character-hint { margin: 0 0 10px; font-size: 0.8rem; color: #b5b5b5; }
 
 .character-canvas-wrap {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: min(280px, 100%);
+  aspect-ratio: 1 / 1;
   margin: 0 auto 12px;
   border-radius: 14px;
   overflow: hidden;

@@ -10,6 +10,17 @@
 
   <div id="screen-lobby" class="screen active">
     <div class="lobby-row">
+
+    <!-- ===================== CARD: PERSONAGEM (grande) ===================== -->
+    <div class="character-preview-card">
+      <h3 class="character-title">Crie seu personagem</h3>
+      <p class="character-hint">Desenhe em cima do boneco pra deixar do seu jeito.</p>
+      <div class="character-preview-wrap">
+        <img id="character-preview-img" src="personagem.png" alt="Personagem" draggable="false" />
+      </div>
+      <button type="button" id="btn-open-character-editor" class="btn btn-secondary character-edit-btn">✏️ Editar personagem</button>
+    </div>
+
     <div class="lobby-stack">
       <svg class="site-logo-top" viewBox="0 0 1400 519" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TruTEC">
       <g transform="translate(0.000000,519.000000) scale(0.100000,-0.100000)">
@@ -109,13 +120,17 @@
     </div>
     </div>
 
-    <!-- ===================== PAINEL: CRIAR PERSONAGEM ===================== -->
+    </div>
+  </div>
+
+  <!-- ===================== TELA: EDITAR PERSONAGEM ===================== -->
+  <div id="screen-character-editor" class="screen">
     <div class="character-panel">
-      <h3 class="character-title">Crie seu personagem</h3>
+      <h3 class="character-title">Editar personagem</h3>
       <p class="character-hint">Desenhe em cima do boneco pra deixar do seu jeito.</p>
 
       <div class="character-canvas-wrap">
-        <img id="character-base" src="assets/personagem.png" alt="Personagem" draggable="false" />
+        <img id="character-base" src="personagem.png" alt="Personagem" draggable="false" />
         <canvas id="character-canvas" width="500" height="500"></canvas>
       </div>
 
@@ -145,7 +160,8 @@
         <button type="button" id="btn-character-save" class="btn btn-primary character-save-btn">💾 Salvar personagem</button>
         <p id="character-save-msg" class="character-save-msg"></p>
       </div>
-    </div>
+
+      <button type="button" id="btn-close-character-editor" class="btn btn-ghost character-back-btn">← Voltar</button>
     </div>
   </div>
 
