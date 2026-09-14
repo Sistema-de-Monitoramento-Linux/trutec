@@ -15,7 +15,7 @@
   --felt-highlight: #fff8f033;
   --gold: #fff8f0;
   --gold-bright: #fff8f0;
-  --gold-dim: #2541b2;
+  --gold-dim: #9a9a9a;
   --cream: #fff8f0;
   --ink: #040303;
   --red: #db5375;
@@ -369,7 +369,7 @@ button { font-family: inherit; cursor: pointer; }
 .btn-danger { background: var(--danger); color: white; box-shadow: 0 3px 0 #040303; }
 .btn:hover { filter: brightness(1.08); }
 
-.divider { display: flex; align-items: center; color: #2541b2; font-size: 0.9rem; margin: 2px 0; }
+.divider { display: flex; align-items: center; color: #9a9a9a; font-size: 0.9rem; margin: 2px 0; }
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
 .divider span { padding: 0 10px; }
 
@@ -377,7 +377,7 @@ button { font-family: inherit; cursor: pointer; }
 .join-row input { text-transform: uppercase; text-align: center; letter-spacing: 3px; }
 .join-row .btn { flex-shrink: 0; }
 
-.error-text { color: #050401; min-height: 14px; margin-top: 6px; font-size: 0.9rem; }
+.error-text { color: #db5375; min-height: 14px; margin-top: 6px; font-size: 0.9rem; }
 
 .room-code {
   color: var(--gold-bright);
@@ -394,7 +394,7 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: space-between;
   font-size: 0.9rem;
 }
-.waiting-hint { font-size: 0.8rem; color: #2541b2; }
+.waiting-hint { font-size: 0.8rem; color: #fff8f0; }
 
 /* ---------------------------------------------------------------- */
 /* Mesa de jogo                                                       */
