@@ -224,7 +224,7 @@ function renderState(state) {
   if (me && me.hand) {
     for (const card of me.hand) {
       const el = buildCardEl(card, state.manilhaRank);
-      el.classList.add(card.id === selectedCardId ? 'selected' : '');
+      if (card.id === selectedCardId) el.classList.add('selected');
       const isMyTurn = state.turnSeat === mySeat && !state.pendingCall;
       if (!isMyTurn) el.classList.add('disabled');
       el.addEventListener('click', () => onCardClick(card, isMyTurn));
