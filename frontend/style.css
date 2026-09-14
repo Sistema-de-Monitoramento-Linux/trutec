@@ -46,7 +46,8 @@ html, body {
   background-size: 300% 300%;
   animation: moveStripes 100s linear infinite;
   color: var(--cream);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -63,11 +64,18 @@ button { font-family: inherit; cursor: pointer; }
 .screen {
   display: none;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   align-items: center;
   justify-content: center;
 }
 .screen.active { display: flex; }
+
+#screen-lobby.screen,
+#screen-waiting.screen,
+#screen-gameover.screen {
+  padding: 30px 12px;
+  box-sizing: border-box;
+}
 
 .lobby-stack {
   display: flex;
@@ -80,7 +88,6 @@ button { font-family: inherit; cursor: pointer; }
 .site-logo-top {
   display: block;
   width: min(560px, 88vw);
-  animation: floatLogo 6s ease-in-out infinite;
   filter: drop-shadow(0 10px 20px rgba(0,0,0,0.18));
 }
 
