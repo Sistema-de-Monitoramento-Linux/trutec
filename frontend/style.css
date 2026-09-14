@@ -46,8 +46,7 @@ html, body {
   background-size: 300% 300%;
   animation: moveStripes 100s linear infinite;
   color: var(--cream);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -64,7 +63,7 @@ button { font-family: inherit; cursor: pointer; }
 .screen {
   display: none;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   align-items: center;
   justify-content: center;
 }
@@ -73,7 +72,7 @@ button { font-family: inherit; cursor: pointer; }
 #screen-lobby.screen,
 #screen-waiting.screen,
 #screen-gameover.screen {
-  padding: 30px 12px;
+  padding: 14px 12px;
   box-sizing: border-box;
 }
 
@@ -81,22 +80,25 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 22px;
+  gap: 10px;
   width: min(560px, 94vw);
+  max-height: 100%;
+  justify-content: center;
 }
 
 .site-logo-top {
   display: block;
-  width: min(560px, 88vw);
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.18));
+  width: min(360px, 60vw);
+  flex-shrink: 0;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.18));
 }
 
 .lobby-card {
   background: linear-gradient(180deg, #1a1a1a, #050505);
   border: 1px solid rgba(255,255,255,0.35);
-  border-radius: 24px;
-  padding: 44px 40px;
-  width: min(520px, 94vw);
+  border-radius: 20px;
+  padding: 22px 26px;
+  width: min(480px, 92vw);
   text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
 }
@@ -115,16 +117,16 @@ button { font-family: inherit; cursor: pointer; }
   100% { transform: translateY(0); }
 }
 
-.field { text-align: left; margin-bottom: 20px; }
-.field label { display: block; font-size: 0.95rem; color: #b5b5b5; margin-bottom: 8px; }
+.field { text-align: left; margin-bottom: 12px; }
+.field label { display: block; font-size: 0.85rem; color: #b5b5b5; margin-bottom: 5px; }
 .field input, .join-row input {
   width: 100%;
-  padding: 15px 16px;
+  padding: 11px 14px;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.15);
   background: rgba(0,0,0,0.25);
   color: var(--cream);
-  font-size: 1.2rem;
+  font-size: 1.05rem;
 }
 
 .mode-toggle {
@@ -132,29 +134,29 @@ button { font-family: inherit; cursor: pointer; }
   background: rgba(0,0,0,0.25);
   border-radius: 10px;
   padding: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 14px;
 }
 .mode-btn {
   flex: 1;
-  padding: 13px;
+  padding: 10px;
   border: none;
   background: transparent;
   color: #b5b5b5;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   transition: all .15s;
 }
 .mode-btn.active { background: var(--gold); color: #0a0a0a; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
 
-.lobby-actions { display: flex; flex-direction: column; gap: 14px; }
+.lobby-actions { display: flex; flex-direction: column; gap: 9px; }
 
 .btn {
-  padding: 16px 20px;
+  padding: 12px 18px;
   border-radius: 12px;
   border: none;
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   transition: transform .1s, filter .15s, box-shadow .15s;
 }
 .btn:active { transform: translateY(1px) scale(0.98); }
@@ -173,7 +175,7 @@ button { font-family: inherit; cursor: pointer; }
 .btn-danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #000000; }
 .btn:hover { filter: brightness(1.08); }
 
-.divider { display: flex; align-items: center; color: #8a8a8a; font-size: 0.95rem; margin: 6px 0; }
+.divider { display: flex; align-items: center; color: #8a8a8a; font-size: 0.85rem; margin: 2px 0; }
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
 .divider span { padding: 0 10px; }
 
@@ -181,7 +183,7 @@ button { font-family: inherit; cursor: pointer; }
 .join-row input { text-transform: uppercase; text-align: center; letter-spacing: 3px; }
 .join-row .btn { flex-shrink: 0; }
 
-.error-text { color: #1a1a1a; min-height: 20px; margin-top: 12px; font-size: 1rem; }
+.error-text { color: #1a1a1a; min-height: 14px; margin-top: 6px; font-size: 0.9rem; }
 
 .room-code {
   color: var(--gold-bright);
