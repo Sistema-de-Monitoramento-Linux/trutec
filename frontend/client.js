@@ -175,8 +175,6 @@ function renderState(state) {
   for (const p of state.players) {
     const pos = seatOffsetLabel(p.seat, n);
     if (pos === 'bottom') {
-      document.getElementById('name-bottom').textContent = `${p.name} (você)`;
-      document.getElementById('name-bottom').classList.toggle('active-turn', state.turnSeat === p.seat);
       continue;
     }
     const nameEl = document.getElementById(`name-${pos}`);
@@ -374,10 +372,19 @@ document.getElementById('btn-aumentar-resp').addEventListener('click', () => {
 // ------------------------------------------------------------------
 // Eventos de jogo (banners / resultados)
 // ------------------------------------------------------------------
-function setBanner(text) {
+let bannerTimer = null;
+function setBanner(text, holdMs = 2600) {
   const el = document.getElementById('banner');
-  el.textContent = text || '';
-  el.classList.toggle('show', !!text);
+  clearTimeout(bannerTimer);
+  if (!text) {
+    el.classList.remove('show');
+    return;
+  }
+  el.textContent = text;
+  el.classList.add('show');
+  bannerTimer = setTimeout(() => {
+    el.classList.remove('show');
+  }, holdMs);
 }
 
 socket.on('call_announced', ({ byTeam, byName, level, value }) => {
@@ -412,7 +419,6 @@ document.getElementById('btn-play-again').addEventListener('click', () => locati
 
 socket.on('error_message', (msg) => {
   setBanner(msg);
-  setTimeout(() => setBanner(''), 2500);
 });
 
 // ------------------------------------------------------------------
