@@ -38,13 +38,13 @@ html, body {
   background-color: #ffffff;
   background-image: repeating-linear-gradient(
     120deg,
-    rgba(0, 0, 0, 0.06) 0px,
-    rgba(0, 0, 0, 0.06) 3px,
-    transparent 3px,
-    transparent 46px
+    rgba(0, 0, 0, 0.07) 0px,
+    rgba(0, 0, 0, 0.07) 7px,
+    transparent 7px,
+    transparent 64px
   );
   background-size: 300% 300%;
-  animation: moveStripes 40s linear infinite;
+  animation: moveStripes 100s linear infinite;
   color: var(--cream);
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -87,9 +87,9 @@ button { font-family: inherit; cursor: pointer; }
 .lobby-card {
   background: linear-gradient(180deg, #1a1a1a, #050505);
   border: 1px solid rgba(255,255,255,0.35);
-  border-radius: 20px;
-  padding: 34px 30px;
-  width: min(420px, 92vw);
+  border-radius: 24px;
+  padding: 44px 40px;
+  width: min(520px, 94vw);
   text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
 }
@@ -100,7 +100,7 @@ button { font-family: inherit; cursor: pointer; }
   margin: 0 auto 14px;
   animation: floatLogo 6s ease-in-out infinite;
 }
-.tagline { color: #cfcfcf; margin: 0 0 22px; font-size: 0.95rem; }
+.tagline { color: #cfcfcf; margin: 0 0 26px; font-size: 1.15rem; }
 
 @keyframes floatLogo {
   0%   { transform: translateY(0); }
@@ -108,16 +108,16 @@ button { font-family: inherit; cursor: pointer; }
   100% { transform: translateY(0); }
 }
 
-.field { text-align: left; margin-bottom: 18px; }
-.field label { display: block; font-size: 0.8rem; color: #b5b5b5; margin-bottom: 6px; }
+.field { text-align: left; margin-bottom: 20px; }
+.field label { display: block; font-size: 0.95rem; color: #b5b5b5; margin-bottom: 8px; }
 .field input, .join-row input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 15px 16px;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.15);
   background: rgba(0,0,0,0.25);
   color: var(--cream);
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .mode-toggle {
@@ -125,28 +125,29 @@ button { font-family: inherit; cursor: pointer; }
   background: rgba(0,0,0,0.25);
   border-radius: 10px;
   padding: 4px;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 .mode-btn {
   flex: 1;
-  padding: 10px;
+  padding: 13px;
   border: none;
   background: transparent;
   color: #b5b5b5;
   border-radius: 8px;
   font-weight: 600;
+  font-size: 1.1rem;
   transition: all .15s;
 }
 .mode-btn.active { background: var(--gold); color: #0a0a0a; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
 
-.lobby-actions { display: flex; flex-direction: column; gap: 12px; }
+.lobby-actions { display: flex; flex-direction: column; gap: 14px; }
 
 .btn {
-  padding: 13px 18px;
+  padding: 16px 20px;
   border-radius: 12px;
   border: none;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.15rem;
   transition: transform .1s, filter .15s, box-shadow .15s;
 }
 .btn:active { transform: translateY(1px) scale(0.98); }
@@ -165,7 +166,7 @@ button { font-family: inherit; cursor: pointer; }
 .btn-danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #000000; }
 .btn:hover { filter: brightness(1.08); }
 
-.divider { display: flex; align-items: center; color: #8a8a8a; font-size: 0.8rem; margin: 4px 0; }
+.divider { display: flex; align-items: center; color: #8a8a8a; font-size: 0.95rem; margin: 6px 0; }
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
 .divider span { padding: 0 10px; }
 
@@ -173,7 +174,7 @@ button { font-family: inherit; cursor: pointer; }
 .join-row input { text-transform: uppercase; text-align: center; letter-spacing: 3px; }
 .join-row .btn { flex-shrink: 0; }
 
-.error-text { color: #1a1a1a; min-height: 20px; margin-top: 12px; font-size: 0.85rem; }
+.error-text { color: #1a1a1a; min-height: 20px; margin-top: 12px; font-size: 1rem; }
 
 .room-code {
   color: var(--gold-bright);
