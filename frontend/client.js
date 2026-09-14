@@ -188,13 +188,19 @@ function renderState(state) {
       nameEl.classList.toggle('active-turn', state.turnSeat === p.seat);
     }
     if (handEl) {
-      handEl.classList.toggle('active-turn', state.turnSeat === p.seat);
-      handEl.innerHTML = '';
-      for (let i = 0; i < p.cardsLeft; i++) {
-        const back = document.createElement('div');
-        back.className = 'card-back';
-        handEl.appendChild(back);
+      const isActive = state.turnSeat === p.seat;
+      // só recria os elementos quando a quantidade de cartas muda de fato —
+      // se recriarmos sempre, o navegador nunca vê um estado "anterior"
+      // pra animar a transição de deitada -> de pé.
+      if (handEl.children.length !== p.cardsLeft) {
+        handEl.innerHTML = '';
+        for (let i = 0; i < p.cardsLeft; i++) {
+          const back = document.createElement('div');
+          back.className = 'card-back';
+          handEl.appendChild(back);
+        }
       }
+      handEl.classList.toggle('active-turn', isActive);
     }
   }
   document.getElementById('seat-top').style.visibility = n >= 2 ? 'visible' : 'hidden';
