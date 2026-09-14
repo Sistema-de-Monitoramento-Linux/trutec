@@ -71,29 +71,66 @@
         </div>
       </div>
 
-      <!-- mesa felt -->
-      <div class="felt">
-        <div id="seat-top" class="seat seat-top">
-          <div class="opp-hand" id="hand-top"></div>
-          <div class="seat-name" id="name-top">—</div>
-        </div>
-        <div id="seat-left" class="seat seat-left">
-          <div class="opp-hand vertical" id="hand-left"></div>
-          <div class="seat-name" id="name-left">—</div>
-        </div>
-        <div id="seat-right" class="seat seat-right">
-          <div class="opp-hand vertical" id="hand-right"></div>
-          <div class="seat-name" id="name-right">—</div>
+      <div class="game-layout">
+
+        <!-- ações (coluna esquerda no desktop / barra embaixo no mobile) -->
+        <div class="actions-bar">
+          <button class="action-btn" id="btn-truco" data-level="truco">TRUCO</button>
+          <button class="action-btn" id="btn-seis" data-level="seis">SEIS</button>
+          <button class="action-btn" id="btn-nove" data-level="nove">NOVE</button>
+          <button class="action-btn" id="btn-doze" data-level="doze">DOZE</button>
+          <button class="action-btn danger" id="btn-correr">FUGIR</button>
+          <button class="action-btn" id="btn-esconder">🙈 ESCONDER</button>
+          <button class="action-btn icon" id="btn-toggle-chat">💬</button>
         </div>
 
-        <div class="center-area">
-          <div id="table-cards" class="table-cards"></div>
-          <div id="banner" class="banner"></div>
+        <!-- mesa + mão do jogador (centro) -->
+        <div class="felt-wrap">
+          <div class="felt">
+            <div id="seat-top" class="seat seat-top">
+              <div class="opp-hand" id="hand-top"></div>
+              <div class="seat-name" id="name-top">—</div>
+            </div>
+            <div id="seat-left" class="seat seat-left">
+              <div class="opp-hand vertical" id="hand-left"></div>
+              <div class="seat-name" id="name-left">—</div>
+            </div>
+            <div id="seat-right" class="seat seat-right">
+              <div class="opp-hand vertical" id="hand-right"></div>
+              <div class="seat-name" id="name-right">—</div>
+            </div>
+
+            <div class="center-area">
+              <div id="table-cards" class="table-cards"></div>
+              <div id="banner" class="banner"></div>
+            </div>
+
+            <div id="seat-bottom" class="seat seat-bottom">
+              <div class="seat-name me" id="name-bottom">Você</div>
+            </div>
+          </div>
+
+          <!-- mão do jogador -->
+          <div class="my-hand" id="my-hand"></div>
         </div>
 
-        <div id="seat-bottom" class="seat seat-bottom">
-          <div class="seat-name me" id="name-bottom">Você</div>
+        <!-- chat (coluna direita no desktop / popup no mobile) -->
+        <div id="chat-panel" class="chat-panel hidden">
+          <div class="chat-messages" id="chat-messages"></div>
+          <div class="emoji-row">
+            <button class="emoji-btn">👍</button>
+            <button class="emoji-btn">😂</button>
+            <button class="emoji-btn">😮</button>
+            <button class="emoji-btn">😡</button>
+            <button class="emoji-btn">🔥</button>
+            <button class="emoji-btn">🤫</button>
+          </div>
+          <div class="chat-input-row">
+            <input id="chat-input" maxlength="120" placeholder="Manda a mensagem…" />
+            <button id="btn-send-chat">Enviar</button>
+          </div>
         </div>
+
       </div>
 
       <!-- pedido de truco pendente -->
@@ -105,37 +142,6 @@
             <button id="btn-fugir" class="btn btn-danger">Fugir</button>
             <button id="btn-aumentar-resp" class="btn btn-secondary">Aumentar</button>
           </div>
-        </div>
-      </div>
-
-      <!-- mão do jogador -->
-      <div class="my-hand" id="my-hand"></div>
-
-      <!-- ações -->
-      <div class="actions-bar">
-        <button class="action-btn" id="btn-truco" data-level="truco">TRUCO</button>
-        <button class="action-btn" id="btn-seis" data-level="seis">SEIS</button>
-        <button class="action-btn" id="btn-nove" data-level="nove">NOVE</button>
-        <button class="action-btn" id="btn-doze" data-level="doze">DOZE</button>
-        <button class="action-btn danger" id="btn-correr">FUGIR</button>
-        <button class="action-btn" id="btn-esconder">🙈 ESCONDER</button>
-        <button class="action-btn icon" id="btn-toggle-chat">💬</button>
-      </div>
-
-      <!-- chat lateral -->
-      <div id="chat-panel" class="chat-panel hidden">
-        <div class="chat-messages" id="chat-messages"></div>
-        <div class="emoji-row">
-          <button class="emoji-btn">👍</button>
-          <button class="emoji-btn">😂</button>
-          <button class="emoji-btn">😮</button>
-          <button class="emoji-btn">😡</button>
-          <button class="emoji-btn">🔥</button>
-          <button class="emoji-btn">🤫</button>
-        </div>
-        <div class="chat-input-row">
-          <input id="chat-input" maxlength="120" placeholder="Manda a mensagem…" />
-          <button id="btn-send-chat">Enviar</button>
         </div>
       </div>
 

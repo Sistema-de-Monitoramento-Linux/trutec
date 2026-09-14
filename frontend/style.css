@@ -143,6 +143,18 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
 }
 
+/* Layout do jogo: por padrão (mobile) empilha mesa -> barra de ações;
+   o chat fica fora do fluxo (position: fixed, ver .chat-panel) */
+.game-layout {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.game-layout .felt-wrap { order: 1; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.game-layout .actions-bar { order: 2; }
+.game-layout .chat-panel { order: 3; }
+
 .hud-top {
   display: flex;
   align-items: center;
@@ -222,15 +234,15 @@ button { font-family: inherit; cursor: pointer; }
 
 .opp-hand { display: flex; gap: -6px; }
 .opp-hand .card-back {
-  width: 30px; height: 42px;
-  margin-left: -14px;
-  border-radius: 4px;
+  width: 38px; height: 53px;
+  margin-left: -17px;
+  border-radius: 5px;
   background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
   border: 1px solid rgba(255,255,255,0.4);
 }
 .opp-hand .card-back:first-child { margin-left: 0; }
 .opp-hand.vertical { flex-direction: column; }
-.opp-hand.vertical .card-back { margin-left: 0; margin-top: -20px; }
+.opp-hand.vertical .card-back { margin-left: 0; margin-top: -25px; }
 .opp-hand.vertical .card-back:first-child { margin-top: 0; }
 
 .center-area {
@@ -244,21 +256,21 @@ button { font-family: inherit; cursor: pointer; }
 }
 .table-cards {
   display: grid;
-  grid-template-columns: repeat(2, 54px);
-  grid-template-rows: repeat(2, 76px);
-  gap: 6px;
+  grid-template-columns: repeat(2, 74px);
+  grid-template-rows: repeat(2, 104px);
+  gap: 8px;
   position: relative;
-  width: 114px;
-  height: 158px;
+  width: 156px;
+  height: 216px;
 }
 .table-cards .played-card {
   position: absolute;
-  width: 54px; height: 76px;
+  width: 74px; height: 104px;
 }
-.played-pos-top    { top: 0; left: 30px; }
-.played-pos-left   { top: 40px; left: 0; }
-.played-pos-right  { top: 40px; left: 60px; }
-.played-pos-bottom { top: 80px; left: 30px; }
+.played-pos-top    { top: 0; left: 41px; }
+.played-pos-left   { top: 56px; left: 0; }
+.played-pos-right  { top: 56px; left: 82px; }
+.played-pos-bottom { top: 112px; left: 41px; }
 
 .banner {
   min-height: 26px;
@@ -270,9 +282,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .card {
-  width: 54px; height: 76px;
+  width: 74px; height: 104px;
   background: white;
-  border-radius: 6px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -285,23 +297,32 @@ button { font-family: inherit; cursor: pointer; }
   border: 1px solid rgba(0,0,0,0.1);
 }
 .card.red { color: var(--red); }
-.card .rank { font-size: 1.05rem; line-height: 1; }
-.card .suit { font-size: 1.2rem; line-height: 1; }
+.card .rank { font-size: 1.4rem; line-height: 1; }
+.card .suit { font-size: 1.6rem; line-height: 1; }
 .card.manilha { box-shadow: 0 0 0 2px var(--gold-bright), 0 3px 10px rgba(0,0,0,0.5); }
 .card.facedown {
   background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
 }
 
+/* Mão do jogador: cartas bem maiores, ocupando bom espaço da tela */
 .my-hand {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  padding: 10px 10px 4px;
+  align-items: flex-end;
+  gap: 18px;
+  padding: 16px 16px 20px;
   z-index: 4;
 }
-.my-hand .card { cursor: pointer; }
-.my-hand .card:hover { transform: translateY(-8px); }
-.my-hand .card.selected { transform: translateY(-14px); box-shadow: 0 0 0 3px var(--gold-bright), 0 6px 14px rgba(0,0,0,0.5); }
+.my-hand .card {
+  cursor: pointer;
+  width: clamp(100px, 14vw, 170px);
+  height: clamp(140px, 19.6vw, 238px);
+  border-radius: 12px;
+}
+.my-hand .card .rank { font-size: clamp(1.6rem, 2.6vw, 2.6rem); }
+.my-hand .card .suit { font-size: clamp(1.9rem, 3vw, 3rem); }
+.my-hand .card:hover { transform: translateY(-14px); }
+.my-hand .card.selected { transform: translateY(-22px); box-shadow: 0 0 0 4px var(--gold-bright), 0 8px 20px rgba(0,0,0,0.5); }
 .my-hand .card.disabled { opacity: 0.4; cursor: not-allowed; }
 
 .actions-bar {
@@ -410,15 +431,48 @@ button { font-family: inherit; cursor: pointer; }
 /* Responsivo                                                         */
 /* ---------------------------------------------------------------- */
 @media (max-width: 480px) {
-  .card { width: 46px; height: 64px; }
-  .card .rank { font-size: 0.9rem; }
-  .card .suit { font-size: 1rem; }
-  .my-hand { gap: 6px; }
+  .my-hand { gap: 8px; }
   .action-btn { padding: 9px 10px; font-size: 0.72rem; }
   .score-value { font-size: 1.2rem; }
-  .table-cards { transform: scale(0.85); }
+  .table-cards { transform: scale(0.7); }
 }
 
 @media (min-width: 900px) {
-  .table-wrap { max-width: 1000px; margin: 0 auto; }
+  .table-wrap { max-width: none; margin: 0; }
+
+  /* 3 colunas: ações | mesa | chat */
+  .game-layout { flex-direction: row; }
+  .game-layout .actions-bar { order: 0; }
+  .game-layout .felt-wrap { order: 1; }
+  .game-layout .chat-panel { order: 2; }
+
+  .actions-bar {
+    flex-direction: column;
+    width: 150px;
+    flex-shrink: 0;
+    overflow-x: visible;
+    overflow-y: auto;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 20px 14px;
+  }
+  .action-btn {
+    width: 100%;
+    padding: 18px 10px;
+    font-size: 0.95rem;
+  }
+
+  /* chat sempre visível como coluna, ignora o toggle mobile */
+  .chat-panel,
+  .chat-panel.hidden {
+    display: flex;
+    position: static;
+    width: 320px;
+    height: auto;
+    flex-shrink: 0;
+    border-radius: 0;
+    border: none;
+    border-left: 1px solid rgba(216,178,94,0.3);
+  }
+  #btn-toggle-chat { display: none; }
 }
