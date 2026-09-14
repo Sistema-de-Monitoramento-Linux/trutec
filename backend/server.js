@@ -525,6 +525,11 @@ io.on('connection', (socket) => {
       });
     }
 
+    // Sempre manda o estado com a carta recém-jogada (e a vaza revelada)
+    // ANTES de anunciar o fim da mão — senão a carta que decidiu o ponto
+    // nunca chega a aparecer pra ninguém na mesa.
+    r.broadcastState(io);
+
     if (result.maoOver) {
       const winnerTeam = result.maoWinnerTeam;
       const points = r.stake;
@@ -544,8 +549,6 @@ io.on('connection', (socket) => {
       }, 2200);
       return;
     }
-
-    r.broadcastState(io);
   });
 
   socket.on('call_truco', ({ level }) => {
@@ -570,6 +573,8 @@ io.on('connection', (socket) => {
     if (result.error) return socket.emit('error_message', result.error);
 
     if (result.ran) {
+      // manda o estado atual (pedido resolvido) antes de anunciar o fim da mão
+      r.broadcastState(io);
       const isGameOver = r.finishMao(result.winnerTeam, result.points);
       io.to(r.code).emit('mao_result', {
         winnerTeam: result.winnerTeam, points: result.points, score: r.score,
@@ -599,6 +604,8 @@ io.on('connection', (socket) => {
     if (!player) return;
     if (r.pendingCall) return socket.emit('error_message', 'Há um pedido pendente — responda com Aceitar ou Fugir.');
     const result = r.runAway(player.seat);
+    // manda o estado atualizado (pendingCall resolvido) antes do aviso de fim de mão
+    r.broadcastState(io);
     const isGameOver = r.finishMao(result.winnerTeam, result.points);
     io.to(r.code).emit('mao_result', {
       winnerTeam: result.winnerTeam, points: result.points, score: r.score,
