@@ -9,9 +9,9 @@
 }
 
 :root {
-  --felt-dark: #040303;
-  --felt: #050401;
-  --felt-light: #2541b2;
+  --felt-dark: #081b40;
+  --felt: #123a7a;
+  --felt-light: #2f5fc9;
   --felt-highlight: #fff8f033;
   --gold: #fff8f0;
   --gold-bright: #fff8f0;
@@ -19,6 +19,8 @@
   --cream: #fff8f0;
   --ink: #040303;
   --red: #d10a1e;
+  --card-back: #b3101f;
+  --card-back-dark: #8a0c18;
   --danger: #e0201a;
   --danger-bright: #ff3b30;
   --panel: #050401;
@@ -588,8 +590,11 @@ button { font-family: inherit; cursor: pointer; }
   top: 0; left: 0;
   width: 58px; height: 82px;
   border-radius: 8px;
-  background: repeating-linear-gradient(45deg, #050401, #050401 4px, #040303 4px, #040303 8px);
-  border: 1px solid rgba(255,255,255,0.3);
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 8px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 8px),
+    linear-gradient(135deg, var(--card-back), var(--card-back-dark));
+  border: 2px solid #fff8f0;
   box-shadow: 0 3px 8px rgba(0,0,0,0.4);
 }
 .vira-stack-back  { transform: rotate(-9deg) translate(-3px, 2px); }
@@ -681,8 +686,11 @@ button { font-family: inherit; cursor: pointer; }
   width: 58px; height: 82px;
   margin-left: -28px;
   border-radius: 6px;
-  background: repeating-linear-gradient(45deg, #050401, #050401 4px, #040303 4px, #040303 8px);
-  border: 1px solid rgba(255,255,255,0.4);
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 8px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 8px),
+    linear-gradient(135deg, var(--card-back), var(--card-back-dark));
+  border: 2px solid #fff8f0;
   box-shadow: 0 8px 14px rgba(0,0,0,0.5);
   transition: transform .5s cubic-bezier(.34, 1.56, .64, 1), box-shadow .4s ease;
 }
@@ -748,7 +756,7 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   inset: -22px;
   border-radius: 50%;
-  background: var(--felt);
+  background: radial-gradient(circle at 40% 32%, var(--felt-light) 0%, var(--felt) 55%, var(--felt-dark) 100%);
   border: 2px solid rgba(255,255,255,0.45);
   box-shadow:
     0 32px 60px rgba(0,0,0,0.65),
@@ -837,7 +845,10 @@ button { font-family: inherit; cursor: pointer; }
     0 8px 18px rgba(255,255,255,0.35);
 }
 .card.facedown {
-  background: repeating-linear-gradient(45deg, #050401, #050401 4px, #040303 4px, #040303 8px);
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 8px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 8px),
+    linear-gradient(135deg, var(--card-back), var(--card-back-dark));
 }
 
 /* índices de canto, tipo carta de baralho de verdade */
