@@ -606,53 +606,89 @@ button { font-family: inherit; cursor: pointer; }
 .wp-team-a { color: var(--red); opacity: 1; font-weight: 700; }
 .wp-team-b { color: var(--wood-light); opacity: 1; font-weight: 700; }
 
-/* Linha com botões de dupla: nome fica compacto à esquerda, os botões
-   ocupam o espaço vazio à direita como um bloco grande, à parte do nome
-   — assim eles nunca empurram a linha pra fora do card. */
-.wp-row-edit .wp-info { flex: 0 1 auto; }
+.waiting-hint { font-size: 0.8rem; color: #fff8f0; }
 
-.wp-team-toggle {
+/* ---------------------------------------------------------------- */
+/* Escolha de duplas (2v2): duas áreas lado a lado. O host arrasta os  */
+/* cards dos jogadores de uma área pra outra pra montar os times.      */
+/* ---------------------------------------------------------------- */
+.teams-board {
   display: flex;
-  gap: 6px;
-  flex: 1 1 40%;
-  min-width: 0;
-  align-self: center;
+  gap: 10px;
 }
-.wp-team-btn {
+.team-column {
   flex: 1;
   min-width: 0;
-  padding: 7px 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.2);
   background: rgba(0,0,0,0.2);
-  color: #fff8f0;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 0.78rem;
-  opacity: 0.55;
-  transition: background .15s ease, opacity .15s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 8px;
+  transition: background .15s ease, border-color .15s ease;
 }
-.wp-team-btn:active { opacity: 0.85; }
-.wp-team-btn.team-a.active {
-  background: var(--red);
-  border-color: var(--red);
-  color: #fff8f0;
-  opacity: 1;
+.team-column-hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.3);
 }
-.wp-team-btn.team-b.active {
-  background: var(--wood-light);
-  border-color: var(--wood-light);
-  color: #fff8f0;
-  opacity: 1;
+.team-column-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.team-column-a .team-column-title { color: var(--red); }
+.team-column-b .team-column-title { color: var(--wood-light); }
+.team-column-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.waiting-hint { font-size: 0.8rem; color: #fff8f0; }
+.team-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 0;
+}
+.team-card .wp-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+.team-card .wp-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.team-card-draggable {
+  cursor: grab;
+  touch-action: none;
+}
+.team-card-source-dragging { opacity: 0.35; }
+.team-card-ghost {
+  position: fixed;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.95;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+}
+
+.team-slot-empty {
+  border: 1px dashed rgba(255,255,255,0.25);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 0.72rem;
+  color: #fff8f0;
+  opacity: 0.5;
+}
 
 /* ---------------------------------------------------------------- */
 /* Mesa de jogo                                                       */

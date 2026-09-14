@@ -428,51 +428,83 @@ socket.on('lobby_update', (lobby) => {
   const wrap = document.getElementById('waiting-players');
   wrap.innerHTML = '';
 
-  // No 2v2, o host (assento 0) pode montar as duplas manualmente antes de
-  // iniciar. Os demais jogadores só veem em qual dupla cada um está.
+  // No 2v2, o host (assento 0) pode montar as duplas arrastando os
+  // jogadores entre as duas áreas. Os demais só veem o resultado.
   const isHost = myWaitingSeat === 0;
   const canEditTeams = isHost && lobby.mode === '2v2' && !lobby.started;
 
+  if (lobby.mode === '2v2') {
+    wrap.appendChild(renderTeamsBoard(lobby, canEditTeams));
+  } else {
+    wrap.appendChild(renderClassicList(lobby));
+  }
+
+  updateStartButton(lobby);
+});
+
+function playerCardHtml(p, draggable) {
+  const avatarSrc = p.character || 'assets/personagem.svg';
+  return `
+    <div class="team-card${draggable ? ' team-card-draggable' : ''}" data-seat="${p.seat}">
+      <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
+      <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
+    </div>
+  `;
+}
+
+// Monta as duas áreas (Dupla 1 / Dupla 2) do modo 2v2. Quando `canEdit` é
+// true (só pro host, antes de iniciar), cada card de jogador pode ser
+// arrastado de uma área pra outra.
+function renderTeamsBoard(lobby, canEdit) {
+  const board = document.createElement('div');
+  board.className = 'teams-board';
+
+  for (const team of [0, 1]) {
+    const teamPlayers = lobby.players.filter(p => p.team === team);
+    const missing = Math.max(0, 2 - teamPlayers.length);
+
+    const col = document.createElement('div');
+    col.className = `team-column team-column-${team === 0 ? 'a' : 'b'}`;
+    col.dataset.team = String(team);
+
+    let bodyHtml = teamPlayers.map(p => playerCardHtml(p, canEdit)).join('');
+    for (let i = 0; i < missing; i++) {
+      bodyHtml += `<div class="team-slot-empty">Aguardando…</div>`;
+    }
+
+    col.innerHTML = `
+      <div class="team-column-title">Dupla ${team + 1}</div>
+      <div class="team-column-body">${bodyHtml}</div>
+    `;
+    board.appendChild(col);
+  }
+
+  if (canEdit) {
+    board.querySelectorAll('.team-card-draggable').forEach(card => {
+      card.addEventListener('pointerdown', (e) => startTeamCardDrag(e, card));
+    });
+  }
+
+  return board;
+}
+
+// Sala de espera do 1v1: lista simples, sem edição de time (não há o que
+// escolher com 2 jogadores e 2 times fixos).
+function renderClassicList(lobby) {
+  const list = document.createElement('div');
   for (let i = 0; i < lobby.maxPlayers; i++) {
     const p = lobby.players.find(pl => pl.seat === i);
     const row = document.createElement('div');
     row.className = 'wp-row';
     if (p) {
       const avatarSrc = p.character || 'assets/personagem.svg';
-
-      if (lobby.mode === '2v2' && canEditTeams) {
-        // Host editando: nome à esquerda, botões grandes de dupla ocupando
-        // o espaço vazio à direita da linha (como um item de flex à parte,
-        // não dentro do bloco de nome — assim não estoura a largura do card).
-        row.classList.add('wp-row-edit');
-        row.innerHTML = `
-          <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
-          <div class="wp-info">
-            <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
-          </div>
-          <div class="wp-team-toggle" role="group" aria-label="Escolher dupla de ${escapeHtml(p.name)}">
-            <button type="button" class="wp-team-btn team-a ${p.team === 0 ? 'active' : ''}" data-seat="${p.seat}" data-team="0">Dupla 1</button>
-            <button type="button" class="wp-team-btn team-b ${p.team === 1 ? 'active' : ''}" data-seat="${p.seat}" data-team="1">Dupla 2</button>
-          </div>
-        `;
-      } else if (lobby.mode === '2v2') {
-        const teamHtml = `<span class="wp-team wp-team-${p.team === 0 ? 'a' : 'b'}">Dupla ${p.team + 1}</span>`;
-        row.innerHTML = `
-          <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
-          <div class="wp-info">
-            <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
-            ${teamHtml}
-          </div>
-        `;
-      } else {
-        row.innerHTML = `
-          <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
-          <div class="wp-info">
-            <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
-            <span class="wp-team">Time ${p.team + 1}</span>
-          </div>
-        `;
-      }
+      row.innerHTML = `
+        <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
+        <div class="wp-info">
+          <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
+          <span class="wp-team">Time ${p.team + 1}</span>
+        </div>
+      `;
     } else {
       row.className += ' wp-row-empty';
       row.innerHTML = `
@@ -483,26 +515,95 @@ socket.on('lobby_update', (lobby) => {
         </div>
       `;
     }
-    wrap.appendChild(row);
+    list.appendChild(row);
+  }
+  return list;
+}
+
+// ------------------------------------------------------------------
+// Arrastar jogador entre "Dupla 1" e "Dupla 2" (host, modo 2v2)
+// Usa Pointer Events pra funcionar igual com mouse e touch.
+// ------------------------------------------------------------------
+let teamDrag = null;
+
+function startTeamCardDrag(e, cardEl) {
+  if (e.button !== undefined && e.button !== 0) return;
+  e.preventDefault();
+
+  const seat = parseInt(cardEl.dataset.seat, 10);
+  const rect = cardEl.getBoundingClientRect();
+  const ghost = cardEl.cloneNode(true);
+  ghost.className = 'team-card team-card-ghost';
+  ghost.style.width = rect.width + 'px';
+  ghost.style.left = rect.left + 'px';
+  ghost.style.top = rect.top + 'px';
+  document.body.appendChild(ghost);
+
+  cardEl.classList.add('team-card-source-dragging');
+
+  teamDrag = {
+    seat,
+    ghost,
+    sourceEl: cardEl,
+    startX: e.clientX,
+    startY: e.clientY,
+    offsetX: e.clientX - rect.left,
+    offsetY: e.clientY - rect.top,
+    moved: false
+  };
+
+  document.addEventListener('pointermove', onTeamDragMove);
+  document.addEventListener('pointerup', onTeamDragEnd, { once: true });
+}
+
+function onTeamDragMove(e) {
+  if (!teamDrag) return;
+  const dx = e.clientX - teamDrag.startX;
+  const dy = e.clientY - teamDrag.startY;
+  if (Math.abs(dx) > 4 || Math.abs(dy) > 4) teamDrag.moved = true;
+
+  teamDrag.ghost.style.left = (e.clientX - teamDrag.offsetX) + 'px';
+  teamDrag.ghost.style.top = (e.clientY - teamDrag.offsetY) + 'px';
+
+  document.querySelectorAll('.team-column').forEach(c => c.classList.remove('team-column-hover'));
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  const col = el && el.closest('.team-column');
+  if (col) col.classList.add('team-column-hover');
+}
+
+function onTeamDragEnd(e) {
+  document.removeEventListener('pointermove', onTeamDragMove);
+  if (!teamDrag) return;
+
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  const col = el && el.closest('.team-column');
+  document.querySelectorAll('.team-column').forEach(c => c.classList.remove('team-column-hover'));
+
+  teamDrag.sourceEl.classList.remove('team-card-source-dragging');
+  teamDrag.ghost.remove();
+
+  // Toque rápido sem arrastar: alterna o jogador pra outra dupla direto.
+  const seat = teamDrag.seat;
+  let targetTeam = null;
+  if (col) {
+    targetTeam = parseInt(col.dataset.team, 10);
+  } else if (!teamDrag.moved) {
+    const sourceCol = teamDrag.sourceEl.closest('.team-column');
+    const currentTeam = sourceCol ? parseInt(sourceCol.dataset.team, 10) : null;
+    if (currentTeam !== null) targetTeam = currentTeam === 0 ? 1 : 0;
   }
 
-  if (canEditTeams) {
-    wrap.querySelectorAll('.wp-team-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const seat = parseInt(btn.dataset.seat, 10);
-        const team = parseInt(btn.dataset.team, 10);
-        socket.emit('set_player_team', { seat, team }, (res) => {
-          if (res && !res.ok) {
-            const el = document.getElementById('waiting-error');
-            if (el) el.textContent = res.error || 'Não foi possível mudar a dupla.';
-          }
-        });
-      });
+  teamDrag = null;
+
+  if (targetTeam !== null) {
+    socket.emit('set_player_team', { seat, team: targetTeam }, (res) => {
+      if (res && !res.ok) {
+        const errEl = document.getElementById('waiting-error');
+        if (errEl) errEl.textContent = res.error || 'Não foi possível mudar a dupla.';
+      }
     });
   }
-
-  updateStartButton(lobby);
-});
+}
 
 // ------------------------------------------------------------------
 // Botão "Iniciar partida" (só o host, assento 0, vê e pode clicar)
