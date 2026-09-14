@@ -434,6 +434,7 @@ class Room {
         name: p.name,
         team: p.team,
         connected: p.connected,
+        character: p.character || null,
         cardsLeft: p.hand.length,
         hand: p.seat === viewerSeat ? p.hand : undefined
       })),

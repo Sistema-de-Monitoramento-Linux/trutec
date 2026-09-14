@@ -830,16 +830,23 @@ function renderState(state) {
     if (pos === 'bottom') {
       continue;
     }
+    const seatEl = document.getElementById(`seat-${pos}`);
     const nameEl = document.getElementById(`name-${pos}`);
     const handEl = document.getElementById(`hand-${pos}`);
+    const avatarEl = document.getElementById(`avatar-${pos}`);
+    const isActive = state.turnSeat === p.seat;
+    if (seatEl) seatEl.classList.toggle('active-seat', isActive);
+    if (avatarEl) {
+      const src = p.character || 'assets/personagem.svg';
+      if (avatarEl.getAttribute('src') !== src) avatarEl.setAttribute('src', src);
+    }
     if (nameEl) {
       let label = p.name;
       if (n === 4 && p.team === myTeam) label += ' (parceiro)';
       nameEl.textContent = label;
-      nameEl.classList.toggle('active-turn', state.turnSeat === p.seat);
+      nameEl.classList.toggle('active-turn', isActive);
     }
     if (handEl) {
-      const isActive = state.turnSeat === p.seat;
       // só recria os elementos quando a quantidade de cartas muda de fato —
       // se recriarmos sempre, o navegador nunca vê um estado "anterior"
       // pra animar a transição de deitada -> de pé.
@@ -897,6 +904,11 @@ function renderState(state) {
 
   // minha mão
   const me = state.players.find(p => p.seat === mySeat);
+  const myAvatarEl = document.getElementById('avatar-bottom');
+  if (myAvatarEl) {
+    const mySrc = (me && me.character) || getSavedCharacter() || 'assets/personagem.svg';
+    if (myAvatarEl.getAttribute('src') !== mySrc) myAvatarEl.setAttribute('src', mySrc);
+  }
   const handWrap = document.getElementById('my-hand');
   handWrap.innerHTML = '';
   if (me && me.hand) {

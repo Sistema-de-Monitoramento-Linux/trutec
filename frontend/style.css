@@ -857,6 +857,148 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: 0 0 12px rgba(255,255,255,0.6);
 }
 
+/* ------------------------------------------------------------------ */
+/* Personagens em 3D nas cadeiras — cada um "sentado" ao redor da mesa, */
+/* apoiados no mesmo rig de perspectiva usado pelas mãos de cartas.     */
+/* Como a arte é 2D (chapada), a sensação de volume vem de: sombra de   */
+/* contato no feltro, luz/sombra degradê por cima da imagem (blend      */
+/* overlay/multiply) e inclinação em X/Y coerente com o ângulo de       */
+/* visão de cada cadeira.                                               */
+/* ------------------------------------------------------------------ */
+.seat-figure {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-style: preserve-3d;
+  animation: figureBob 3.6s ease-in-out infinite;
+}
+
+/* sombra de contato: ancora o personagem no feltro, como se a luz de
+   cima estivesse projetando ele pra baixo, na direção do centro da mesa */
+.seat-shadow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 60%;
+  height: 14px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.28) 55%, transparent 80%);
+  border-radius: 50%;
+  transform: translateX(-50%) translateZ(-1px) scale(1);
+  filter: blur(1px);
+  transition: opacity .3s ease, transform .3s ease;
+  z-index: 0;
+}
+
+.seat-avatar-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+  /* recorta uma sombra projetada seguindo o alfa do próprio desenho,
+     em vez de uma caixa retangular — dá uma leitura de "peso" real */
+  filter:
+    drop-shadow(0 10px 8px rgba(0,0,0,0.45))
+    drop-shadow(0 2px 2px rgba(0,0,0,0.35));
+  transition: filter .3s ease, transform .3s ease;
+}
+
+/* luz vinda de cima da mesa (spot central) + sombra de base, aplicadas
+   como camadas de gradiente com blend mode por cima do desenho chapado */
+.seat-figure::before,
+.seat-figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 50% 50% 40% 40%;
+}
+.seat-figure::before {
+  /* brilho superior esquerdo, tipo reflexo de plástico/verniz */
+  background: radial-gradient(circle at 34% 18%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.14) 26%, transparent 55%);
+  mix-blend-mode: overlay;
+  opacity: 0.85;
+}
+.seat-figure::after {
+  /* sombra inferior, degradê pra dar volume e "assentar" o corpo */
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 30%, transparent 60%);
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+
+@keyframes figureBob {
+  0%, 100% { transform: translateY(0) rotateZ(0deg); }
+  50% { transform: translateY(-3px) rotateZ(0.6deg); }
+}
+
+/* Cadeira de cima: personagem reclinado levemente pra trás, como se
+   estivesse debruçado sobre a mesa olhando as próprias cartas. */
+.seat-top .seat-figure {
+  transform-origin: 50% 100%;
+  transform: rotateX(22deg) translateZ(6px);
+}
+.seat-top .seat-figure .seat-avatar-img { transform-origin: 50% 100%; }
+
+/* Cadeira da esquerda: inclinado pro lado, "debruçado" na direção do
+   centro da mesa, igual o ângulo já usado nas cartas dela. */
+.seat-left .seat-figure {
+  transform-origin: 100% 100%;
+  transform: rotateY(-22deg) rotateZ(-2deg) translateZ(4px);
+}
+
+/* Cadeira da direita: espelhado. */
+.seat-right .seat-figure {
+  transform-origin: 0% 100%;
+  transform: rotateY(22deg) rotateZ(2deg) translateZ(4px);
+}
+
+/* Quando é a vez do jogador, o personagem "acorda": levanta, ganha luz
+   de destaque e a sombra embaixo dele se intensifica, puxando o olhar. */
+.seat-top.active-seat .seat-figure,
+.seat-left.active-seat .seat-figure,
+.seat-right.active-seat .seat-figure {
+  transform: rotateX(0deg) rotateY(0deg) translateY(-6px) translateZ(14px) scale(1.08);
+}
+.active-seat .seat-avatar-img {
+  filter:
+    drop-shadow(0 14px 10px rgba(0,0,0,0.5))
+    drop-shadow(0 0 14px rgba(255,248,240,0.75));
+}
+.active-seat .seat-shadow {
+  opacity: 1;
+  transform: translateX(-50%) translateZ(-1px) scale(1.25);
+}
+
+/* Meu personagem: em primeiro plano, visto "de baixo", maior e mais
+   próximo da câmera — como se fosse o seu próprio corpo sentado à mesa,
+   com as cartas na mão apoiadas à sua frente por cima dele. */
+.seat-figure-me {
+  width: 128px;
+  height: 128px;
+  transform: rotateX(-8deg) translateZ(10px);
+  transform-origin: 50% 100%;
+  animation: figureBob 4.2s ease-in-out infinite;
+}
+.seat-figure-me .seat-avatar-img {
+  filter:
+    drop-shadow(0 16px 14px rgba(0,0,0,0.55))
+    drop-shadow(0 3px 3px rgba(0,0,0,0.4));
+}
+.seat-shadow-me {
+  width: 70%;
+  height: 20px;
+  bottom: -4px;
+}
+
+@media (max-width: 720px) {
+  .seat-figure { width: 54px; height: 54px; }
+  .seat-figure-me { width: 92px; height: 92px; }
+}
+
 /* Mãos dos oponentes em 3D real — cada lado inclinado no eixo certo,
    como se você estivesse de frente pra eles do seu lado da mesa. */
 .opp-hand { display: flex; gap: -6px; transform-style: preserve-3d; }
