@@ -35,10 +35,24 @@
 html, body {
   margin: 0;
   height: 100%;
-  background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
+  background-color: #ffffff;
+  background-image: repeating-linear-gradient(
+    120deg,
+    rgba(0, 0, 0, 0.06) 0px,
+    rgba(0, 0, 0, 0.06) 3px,
+    transparent 3px,
+    transparent 46px
+  );
+  background-size: 300% 300%;
+  animation: moveStripes 40s linear infinite;
   color: var(--cream);
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes moveStripes {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
 }
 
 button { font-family: inherit; cursor: pointer; }
@@ -67,8 +81,8 @@ button { font-family: inherit; cursor: pointer; }
 
 .site-logo {
   display: block;
-  width: min(420px, 82vw);
-  margin: 0 auto 6px;
+  width: min(340px, 74vw);
+  margin: 0 auto 14px;
   animation: floatLogo 6s ease-in-out infinite;
 }
 .tagline { color: #cfcfcf; margin: 0 0 22px; font-size: 0.95rem; }
