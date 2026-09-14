@@ -474,7 +474,7 @@ button { font-family: inherit; cursor: pointer; }
   align-items: center;
   justify-content: center;
   gap: 14px;
-  background: linear-gradient(165deg, #171207 0%, #0a0805 100%);
+  background: rgba(255,248,240,0.06);
   border: 1px solid rgba(255,248,240,0.25);
   border-radius: 16px;
   padding: 16px 20px;
@@ -482,10 +482,10 @@ button { font-family: inherit; cursor: pointer; }
   width: fit-content;
   max-width: 100%;
   cursor: pointer;
-  transition: border-color .15s, transform .1s;
+  transition: background .15s, border-color .15s;
 }
-.room-code-box:hover { border-color: rgba(255,248,240,0.5); }
-.room-code-box:active { transform: scale(0.98); }
+.room-code-box:hover { background: rgba(255,248,240,0.1); border-color: rgba(255,248,240,0.5); }
+.room-code-box:active { background: rgba(255,248,240,0.14); }
 
 .room-code-box .room-code {
   font-size: 2.4rem;
@@ -493,7 +493,6 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: 7px;
   line-height: 1;
   font-family: monospace;
-  text-shadow: 0 0 18px rgba(255,248,240,0.35);
 }
 
 .btn-copy-code {
@@ -508,10 +507,10 @@ button { font-family: inherit; cursor: pointer; }
   background: rgba(255,248,240,0.08);
   color: var(--cream);
   cursor: pointer;
-  transition: background .15s, transform .1s, color .15s;
+  transition: background .15s, color .15s, border-color .15s;
 }
 .btn-copy-code:hover { background: rgba(255,248,240,0.18); }
-.btn-copy-code:active { transform: scale(0.92); }
+.btn-copy-code:active { background: rgba(255,248,240,0.24); }
 .btn-copy-code.copied { color: #4ddb85; border-color: rgba(77,219,133,0.5); background: rgba(77,219,133,0.12); }
 
 .copy-feedback {
