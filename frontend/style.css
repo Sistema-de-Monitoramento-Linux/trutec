@@ -80,7 +80,7 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   width: min(560px, 94vw);
   max-height: 100%;
   justify-content: center;
@@ -88,7 +88,7 @@ button { font-family: inherit; cursor: pointer; }
 
 .site-logo-top {
   display: block;
-  width: min(360px, 60vw);
+  width: min(320px, 56vw);
   flex-shrink: 0;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,0.18));
 }
@@ -97,7 +97,7 @@ button { font-family: inherit; cursor: pointer; }
   background: linear-gradient(180deg, #1a1a1a, #050505);
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
-  padding: 22px 26px;
+  padding: 20px 26px;
   width: min(480px, 92vw);
   text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
@@ -118,15 +118,15 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .field { text-align: left; margin-bottom: 12px; }
-.field label { display: block; font-size: 0.85rem; color: #b5b5b5; margin-bottom: 5px; }
+.field label { display: block; font-size: 0.95rem; color: #b5b5b5; margin-bottom: 5px; }
 .field input, .join-row input {
   width: 100%;
-  padding: 11px 14px;
+  padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.15);
   background: rgba(0,0,0,0.25);
   color: var(--cream);
-  font-size: 1.05rem;
+  font-size: 1.15rem;
 }
 
 .mode-toggle {
@@ -138,13 +138,13 @@ button { font-family: inherit; cursor: pointer; }
 }
 .mode-btn {
   flex: 1;
-  padding: 10px;
+  padding: 11px;
   border: none;
   background: transparent;
   color: #b5b5b5;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
   transition: all .15s;
 }
 .mode-btn.active { background: var(--gold); color: #0a0a0a; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
@@ -152,11 +152,11 @@ button { font-family: inherit; cursor: pointer; }
 .lobby-actions { display: flex; flex-direction: column; gap: 9px; }
 
 .btn {
-  padding: 12px 18px;
+  padding: 13px 18px;
   border-radius: 12px;
   border: none;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   transition: transform .1s, filter .15s, box-shadow .15s;
 }
 .btn:active { transform: translateY(1px) scale(0.98); }
@@ -175,7 +175,7 @@ button { font-family: inherit; cursor: pointer; }
 .btn-danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #000000; }
 .btn:hover { filter: brightness(1.08); }
 
-.divider { display: flex; align-items: center; color: #8a8a8a; font-size: 0.85rem; margin: 2px 0; }
+.divider { display: flex; align-items: center; color: #8a8a8a; font-size: 0.9rem; margin: 2px 0; }
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
 .divider span { padding: 0 10px; }
 
