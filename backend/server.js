@@ -136,6 +136,7 @@ class Room {
     this.players = []; // { id (socketId), name, seat, team, connected, hand: [] }
     this.started = false;
     this.chatLog = [];
+    this.characterPhaseTimer = null; // setTimeout ativo durante os 45s de "desenhar o personagem"
 
     // Estado de jogo (preenchido em startGame)
     this.deck = [];
@@ -534,12 +535,22 @@ io.on('connection', (socket) => {
     if (!player) return cb && cb({ ok: false, error: 'Você não está nesta sala.' });
     if (player.seat !== 0) return cb && cb({ ok: false, error: 'Só o host pode iniciar a partida.' });
     if (r.started) return cb && cb({ ok: false, error: 'A partida já começou.' });
+    if (r.characterPhaseTimer) return cb && cb({ ok: false, error: 'A partida já está começando.' });
     if (r.players.length < r.maxPlayers) return cb && cb({ ok: false, error: 'Aguardando mais jogadores entrarem.' });
     if (!r.teamsReady()) return cb && cb({ ok: false, error: 'Ajuste as duplas (2 jogadores em cada) antes de iniciar.' });
 
-    r.startGame();
-    r.players.forEach(p => io.to(p.id).emit('game_start', r.redactedStateFor(p.seat)));
-    r.broadcastState(io);
+    // Antes de começar a valer, todo mundo tem alguns segundos pra desenhar
+    // (ou ajustar) o personagem. Só depois desse tempo a mão é distribuída.
+    const CHARACTER_PHASE_MS = 45000;
+    io.to(r.code).emit('character_phase_start', { durationMs: CHARACTER_PHASE_MS });
+    r.characterPhaseTimer = setTimeout(() => {
+      r.characterPhaseTimer = null;
+      if (rooms.get(r.code) !== r) return; // sala foi removida nesse meio tempo
+      r.startGame();
+      r.players.forEach(p => io.to(p.id).emit('game_start', r.redactedStateFor(p.seat)));
+      r.broadcastState(io);
+    }, CHARACTER_PHASE_MS);
+
     cb && cb({ ok: true });
   });
 
@@ -722,6 +733,7 @@ io.on('connection', (socket) => {
       setTimeout(() => {
         const stillThere = rooms.get(r.code);
         if (stillThere && !stillThere.players.some(p => p.connected)) {
+          if (stillThere.characterPhaseTimer) clearTimeout(stillThere.characterPhaseTimer);
           rooms.delete(r.code);
         }
       }, 30000);

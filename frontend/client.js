@@ -718,6 +718,29 @@ document.getElementById('btn-copy-code').addEventListener('click', (e) => {
 // INÍCIO DE JOGO
 // ------------------------------------------------------------------
 let matchIntroPlayed = false;
+let characterPhaseInterval = null;
+
+// Depois que o host aperta "Iniciar partida", todo mundo cai na tela de
+// personagem por alguns segundos antes da mão ser distribuída de verdade.
+socket.on('character_phase_start', ({ durationMs }) => {
+  showScreen('screen-character-editor');
+
+  const backBtn = document.getElementById('btn-close-character-editor');
+  if (backBtn) backBtn.classList.add('hidden');
+
+  const timerEl = document.getElementById('character-phase-timer');
+  if (timerEl) timerEl.classList.add('active');
+
+  const endsAt = Date.now() + durationMs;
+  clearInterval(characterPhaseInterval);
+  const tick = () => {
+    const secsLeft = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
+    if (timerEl) timerEl.textContent = `A partida começa em ${secsLeft}s — desenhe seu personagem!`;
+    if (secsLeft <= 0) clearInterval(characterPhaseInterval);
+  };
+  tick();
+  characterPhaseInterval = setInterval(tick, 250);
+});
 
 function playGameIntro() {
   const overlay = document.getElementById('game-intro');
@@ -736,6 +759,12 @@ function playGameIntro() {
 }
 
 socket.on('game_start', (state) => {
+  clearInterval(characterPhaseInterval);
+  const timerEl = document.getElementById('character-phase-timer');
+  if (timerEl) { timerEl.classList.remove('active'); timerEl.textContent = ''; }
+  const backBtn = document.getElementById('btn-close-character-editor');
+  if (backBtn) backBtn.classList.remove('hidden');
+
   mySeat = state.players.find(p => p.hand !== undefined).seat;
   myTeam = state.players.find(p => p.seat === mySeat).team;
   selectedCardId = null;

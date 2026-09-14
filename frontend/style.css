@@ -169,6 +169,14 @@ button { font-family: inherit; cursor: pointer; }
 .character-back-btn { display: block; width: 100%; margin-top: 4px; }
 .character-title { margin: 0 0 4px; font-size: 1.15rem; color: var(--cream); }
 .character-hint { margin: 0 0 18px; font-size: 0.8rem; color: #fff8f0; }
+.character-phase-timer {
+  display: none;
+  margin: -10px 0 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold-bright);
+}
+.character-phase-timer.active { display: block; }
 
 /* Layout lado a lado: ferramentas à esquerda, boneco enorme centralizado */
 .character-editor-layout {
