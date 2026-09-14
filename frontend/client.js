@@ -30,6 +30,9 @@ let myTeam = null;
 let selectedCardId = null;
 let esconderAtivo = false;
 let latestState = null;
+let pendingPlayOrigin = null; // { cardId, rect } — de onde a minha carta partiu, pra animar até a mesa
+let lastRenderedMao = null;
+let lastRenderedTableLen = 0;
 
 // ------------------------------------------------------------------
 // Navegação de telas
@@ -206,22 +209,28 @@ function renderState(state) {
   document.getElementById('seat-right').style.visibility = n === 4 ? 'visible' : 'hidden';
 
   // mesa (cartas jogadas) — cartas de rodadas anteriores do mesmo jogador
-  // ficam sobrepostas (levemente deslocadas), em vez de somem por trás da nova.
+  // ficam sobrepostas (levemente deslocadas), e as recém-jogadas "voam"
+  // da mão de quem jogou até a mesa, em vez de simplesmente aparecerem.
   const tableWrap = document.getElementById('table-cards');
+  const newPlayStartIdx = (lastRenderedMao === state.maoNumber) ? lastRenderedTableLen : 0;
+  lastRenderedMao = state.maoNumber;
+  lastRenderedTableLen = state.table.length;
+
   tableWrap.innerHTML = '';
   const BASE_ROT = { top: -3, left: 4, right: -4, bottom: 2 };
   const stackCount = {};
-  for (const play of state.table) {
+  state.table.forEach((play, idx) => {
     const pos = seatOffsetLabel(play.seat, n);
-    const idx = stackCount[pos] || 0;
-    stackCount[pos] = idx + 1;
+    const sIdx = stackCount[pos] || 0;
+    stackCount[pos] = sIdx + 1;
     const holder = document.createElement('div');
     holder.className = `played-card played-pos-${pos}`;
-    const rot = (BASE_ROT[pos] || 0) + idx * 6;
-    const dx = idx * 8;
-    const dy = -idx * 8;
-    holder.style.transform = `rotate(${rot}deg) translate(${dx}px, ${dy}px)`;
-    holder.style.zIndex = String(idx + 1);
+    const rot = (BASE_ROT[pos] || 0) + sIdx * 6;
+    const dx = sIdx * 8;
+    const dy = -sIdx * 8;
+    const finalTransform = `rotate(${rot}deg) translate(${dx}px, ${dy}px)`;
+    holder.style.transform = finalTransform;
+    holder.style.zIndex = String(sIdx + 1);
     if (play.hidden) {
       const back = document.createElement('div');
       back.className = 'card facedown';
@@ -230,7 +239,11 @@ function renderState(state) {
       holder.appendChild(buildCardEl(play.card, state.manilhaRank));
     }
     tableWrap.appendChild(holder);
-  }
+
+    if (idx >= newPlayStartIdx) {
+      animatePlayedCard(holder, play, pos, finalTransform);
+    }
+  });
 
   // minha mão
   const me = state.players.find(p => p.seat === mySeat);
@@ -242,7 +255,7 @@ function renderState(state) {
       if (card.id === selectedCardId) el.classList.add('selected');
       const isMyTurn = state.turnSeat === mySeat && !state.pendingCall;
       if (!isMyTurn) el.classList.add('disabled');
-      el.addEventListener('click', () => onCardClick(card, isMyTurn));
+      el.addEventListener('click', () => onCardClick(card, isMyTurn, el));
       handWrap.appendChild(el);
     }
   }
@@ -252,6 +265,38 @@ function renderState(state) {
 
   // pedido pendente
   updateCallOverlay(state);
+}
+
+// Anima a carta "voando" da mão de quem jogou até a posição final na mesa
+// (técnica FLIP: parte da posição de origem e transiciona até o destino real).
+function animatePlayedCard(holder, play, pos, finalTransform) {
+  let originRect = null;
+
+  if (play.seat === mySeat && pendingPlayOrigin && play.card && pendingPlayOrigin.cardId === play.card.id) {
+    originRect = pendingPlayOrigin.rect;
+    pendingPlayOrigin = null;
+  } else if (pos === 'bottom') {
+    const myHandEl = document.getElementById('my-hand');
+    if (myHandEl) originRect = myHandEl.getBoundingClientRect();
+  } else {
+    const srcEl = document.getElementById(`hand-${pos}`);
+    if (srcEl) originRect = srcEl.getBoundingClientRect();
+  }
+
+  if (!originRect) return;
+
+  const destRect = holder.getBoundingClientRect();
+  const ox = (originRect.left + originRect.width / 2) - (destRect.left + destRect.width / 2);
+  const oy = (originRect.top + originRect.height / 2) - (destRect.top + destRect.height / 2);
+
+  holder.style.transition = 'none';
+  holder.style.opacity = '0.5';
+  holder.style.transform = `translate(${ox}px, ${oy}px) scale(0.62) ${finalTransform}`;
+  // força o navegador a aplicar o estado inicial antes de animar até o final
+  void holder.offsetWidth;
+  holder.style.transition = 'transform .32s cubic-bezier(.22,.75,.32,1), opacity .28s ease';
+  holder.style.transform = finalTransform;
+  holder.style.opacity = '1';
 }
 
 function renderMiniCard(el, card) {
@@ -277,10 +322,13 @@ function buildCardEl(card, manilhaRank) {
   return el;
 }
 
-function onCardClick(card, isMyTurn) {
+function onCardClick(card, isMyTurn, el) {
   if (!isMyTurn) return;
   // um clique já joga a carta
   selectedCardId = card.id;
+  if (el) {
+    pendingPlayOrigin = { cardId: card.id, rect: el.getBoundingClientRect() };
+  }
   playSelectedCard();
 }
 

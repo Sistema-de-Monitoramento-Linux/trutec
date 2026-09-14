@@ -678,15 +678,8 @@ button { font-family: inherit; cursor: pointer; }
   100% { opacity: 0; transform: translateY(-90px) scale(1); }
 }
 
-/* animação de carta jogada */
-@keyframes dropIn {
-  from { opacity: 0; transform: scale(0.5) translateY(-40px) rotate(0deg); }
-  to { opacity: 1; transform: scale(1) translateY(0) rotate(var(--rot, 0deg)); }
-}
-.played-pos-top    .card { animation: dropIn .28s ease-out; --rot: -3deg; }
-.played-pos-left   .card { animation: dropIn .28s ease-out; --rot: 4deg; }
-.played-pos-right  .card { animation: dropIn .28s ease-out; --rot: -4deg; }
-.played-pos-bottom .card { animation: dropIn .28s ease-out; --rot: 2deg; }
+/* a animação da carta jogada agora é feita via JS (animatePlayedCard),
+   que faz a carta "voar" da mão de quem jogou até a posição real na mesa */
 
 @keyframes dealCard {
   from { opacity: 0; transform: translateY(-50px) scale(0.7) rotate(0deg); }
