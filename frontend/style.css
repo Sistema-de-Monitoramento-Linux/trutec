@@ -33,6 +33,7 @@
 html, body {
   margin: 0;
   height: 100%;
+  touch-action: manipulation;
   background-color: #fff8f0;
   background-image: repeating-linear-gradient(
     120deg,

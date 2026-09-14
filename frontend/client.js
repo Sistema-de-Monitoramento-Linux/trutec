@@ -2,6 +2,42 @@
 // TRUCO PAULISTA ONLINE — client.js
 // ============================================================================
 
+// --------------------------------------------------------------------------
+// Bloqueio de zoom: o site é pensado pra rodar numa resolução fixa (a mesa,
+// as cartas, tudo depende disso). Zoom do usuário (pinch, duplo toque,
+// Ctrl+scroll, Ctrl+/Ctrl-) quebra o layout, então bloqueamos tudo aqui.
+// --------------------------------------------------------------------------
+
+// Pinch-zoom no Safari/iOS (evento proprietário, ignora o viewport meta às vezes)
+document.addEventListener('gesturestart', (e) => e.preventDefault());
+document.addEventListener('gesturechange', (e) => e.preventDefault());
+document.addEventListener('gestureend', (e) => e.preventDefault());
+
+// Pinch-zoom com dois dedos em geral (Android/Chrome)
+document.addEventListener('touchmove', (e) => {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+
+// Duplo toque rápido pra dar zoom
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = now;
+}, { passive: false });
+
+// Ctrl/Cmd + scroll do mouse (zoom do navegador no desktop)
+document.addEventListener('wheel', (e) => {
+  if (e.ctrlKey) e.preventDefault();
+}, { passive: false });
+
+// Atalhos de teclado de zoom: Ctrl/Cmd + '+', '-', '=' ou '0'
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) {
+    e.preventDefault();
+  }
+});
+
 const socket = io(RESOLVED_BACKEND_URL, {
   transports: ['websocket', 'polling']
 });
