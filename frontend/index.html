@@ -175,7 +175,20 @@
   <!-- ===================== TELA: SALA DE ESPERA ===================== -->
   <div id="screen-waiting" class="screen">
     <div class="lobby-card">
-      <h2>Sala <span id="waiting-code" class="room-code"></span></h2>
+      <h2 class="waiting-title">Sala</h2>
+      <div id="room-code-box" class="room-code-box" title="Clique para copiar">
+        <span id="waiting-code" class="room-code"></span>
+        <button id="btn-copy-code" class="btn-copy-code" type="button" aria-label="Copiar código da sala">
+          <svg id="icon-copy" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="12" height="12" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <svg id="icon-check" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </button>
+      </div>
+      <p id="copy-feedback" class="copy-feedback">&nbsp;</p>
       <p class="tagline">Compartilhe o código com os amigos.</p>
       <div id="waiting-players" class="waiting-players"></div>
       <p id="waiting-hint" class="waiting-hint">Aguardando jogadores…</p>

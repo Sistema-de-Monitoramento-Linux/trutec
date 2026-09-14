@@ -64,6 +64,7 @@ let myRoomCode = null;
 let mySeat = null;
 let myTeam = null;
 let myWaitingSeat = null; // meu assento na sala de espera (antes do jogo começar)
+let currentRoomCodeForCopy = null;
 let selectedCardId = null;
 let esconderAtivo = false;
 let latestState = null;
@@ -396,6 +397,7 @@ document.getElementById('btn-leave-waiting').addEventListener('click', () => {
 // ------------------------------------------------------------------
 socket.on('lobby_update', (lobby) => {
   document.getElementById('waiting-code').textContent = lobby.code;
+  currentRoomCodeForCopy = lobby.code;
   const wrap = document.getElementById('waiting-players');
   wrap.innerHTML = '';
   for (let i = 0; i < lobby.maxPlayers; i++) {
@@ -462,6 +464,62 @@ document.getElementById('btn-start-game').addEventListener('click', () => {
       btn.disabled = false;
     }
   });
+});
+
+// ------------------------------------------------------------------
+// Copiar código da sala
+// ------------------------------------------------------------------
+function copyRoomCode() {
+  if (!currentRoomCodeForCopy) return;
+
+  const done = (ok) => {
+    const btn = document.getElementById('btn-copy-code');
+    const iconCopy = document.getElementById('icon-copy');
+    const iconCheck = document.getElementById('icon-check');
+    const feedback = document.getElementById('copy-feedback');
+    if (!ok) {
+      feedback.textContent = 'Não foi possível copiar. Selecione o código manualmente.';
+      feedback.classList.add('show');
+      setTimeout(() => feedback.classList.remove('show'), 2500);
+      return;
+    }
+    btn.classList.add('copied');
+    iconCopy.style.display = 'none';
+    iconCheck.style.display = 'block';
+    feedback.textContent = 'Código copiado!';
+    feedback.classList.add('show');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      iconCopy.style.display = 'block';
+      iconCheck.style.display = 'none';
+      feedback.classList.remove('show');
+    }, 1800);
+  };
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(currentRoomCodeForCopy).then(() => done(true)).catch(() => done(false));
+  } else {
+    // Fallback pra contextos sem clipboard API (http, navegadores antigos)
+    try {
+      const tmp = document.createElement('textarea');
+      tmp.value = currentRoomCodeForCopy;
+      tmp.style.position = 'fixed';
+      tmp.style.opacity = '0';
+      document.body.appendChild(tmp);
+      tmp.select();
+      document.execCommand('copy');
+      document.body.removeChild(tmp);
+      done(true);
+    } catch (e) {
+      done(false);
+    }
+  }
+}
+
+document.getElementById('room-code-box').addEventListener('click', copyRoomCode);
+document.getElementById('btn-copy-code').addEventListener('click', (e) => {
+  e.stopPropagation();
+  copyRoomCode();
 });
 
 // ------------------------------------------------------------------

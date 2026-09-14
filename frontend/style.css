@@ -459,6 +459,71 @@ button { font-family: inherit; cursor: pointer; }
   font-family: monospace;
   font-size: 1.4rem;
 }
+
+.waiting-title {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: rgba(255,248,240,0.65);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.room-code-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(165deg, #171207 0%, #0a0805 100%);
+  border: 1px solid rgba(255,248,240,0.25);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin: 0 auto 4px;
+  width: fit-content;
+  max-width: 100%;
+  cursor: pointer;
+  transition: border-color .15s, transform .1s;
+}
+.room-code-box:hover { border-color: rgba(255,248,240,0.5); }
+.room-code-box:active { transform: scale(0.98); }
+
+.room-code-box .room-code {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 7px;
+  line-height: 1;
+  font-family: monospace;
+  text-shadow: 0 0 18px rgba(255,248,240,0.35);
+}
+
+.btn-copy-code {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,248,240,0.3);
+  background: rgba(255,248,240,0.08);
+  color: var(--cream);
+  cursor: pointer;
+  transition: background .15s, transform .1s, color .15s;
+}
+.btn-copy-code:hover { background: rgba(255,248,240,0.18); }
+.btn-copy-code:active { transform: scale(0.92); }
+.btn-copy-code.copied { color: #4ddb85; border-color: rgba(77,219,133,0.5); background: rgba(77,219,133,0.12); }
+
+.copy-feedback {
+  min-height: 16px;
+  font-size: 0.85rem;
+  color: #4ddb85;
+  margin: 6px 0 0;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.copy-feedback.show { opacity: 1; }
+
 /* A sala de espera agora mostra o avatar (o boneco que o jogador desenhou)
    ao lado do nome, então o card fica maior que um lobby-card comum. */
 #screen-waiting .lobby-card {
