@@ -342,7 +342,7 @@ function getSavedCharacter() {
 // ------------------------------------------------------------------
 // Abrir/fechar a tela de edição do personagem a partir do lobby
 // ------------------------------------------------------------------
-document.getElementById('btn-open-character-editor').addEventListener('click', () => {
+document.getElementById('btn-open-character-editor')?.addEventListener('click', () => {
   showScreen('screen-character-editor');
 });
 
