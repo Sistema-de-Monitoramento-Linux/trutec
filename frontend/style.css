@@ -69,6 +69,21 @@ button { font-family: inherit; cursor: pointer; }
 }
 .screen.active { display: flex; }
 
+.lobby-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  width: min(560px, 94vw);
+}
+
+.site-logo-top {
+  display: block;
+  width: min(560px, 88vw);
+  animation: floatLogo 6s ease-in-out infinite;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.18));
+}
+
 .lobby-card {
   background: linear-gradient(180deg, #1a1a1a, #050505);
   border: 1px solid rgba(255,255,255,0.35);
