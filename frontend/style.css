@@ -113,7 +113,7 @@ button { font-family: inherit; cursor: pointer; }
 /* Em telas estreitas (ou janelas menores) não dá pra encaixar os dois
    hud lado a lado fixados nas pontas sem colidir — volta pro
    empilhamento simples e centralizado. */
-@media (max-width: 1200px) {
+@media (max-width: 1460px) {
   .lobby-row {
     position: static;
     height: auto;
@@ -164,7 +164,7 @@ button { font-family: inherit; cursor: pointer; }
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
   padding: 18px 22px 22px;
-  width: min(360px, 92vw);
+  width: min(460px, 92vw);
   text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
 }
@@ -172,7 +172,7 @@ button { font-family: inherit; cursor: pointer; }
 .character-preview-wrap {
   width: 100%;
   aspect-ratio: 1 / 1;
-  max-height: 46vh;
+  max-height: 60vh;
   margin: 10px auto 16px;
   border-radius: 16px;
   overflow: hidden;
