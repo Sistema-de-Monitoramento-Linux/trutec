@@ -1,14 +1,19 @@
 :root {
-  --felt-dark: #0b3d24;
+  --felt-dark: #072a19;
   --felt: #0f5132;
-  --felt-light: #14713f;
+  --felt-light: #1a7a44;
+  --felt-highlight: #23935280;
   --gold: #d8b25e;
   --gold-bright: #f0cd7c;
+  --gold-dim: #a8863f;
   --cream: #f4ecd8;
   --ink: #1b1410;
   --red: #b3372e;
   --danger: #c0392b;
+  --danger-bright: #e5544a;
   --panel: #123c28;
+  --wood: #3c2414;
+  --wood-light: #6b4226;
   --radius: 14px;
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
@@ -45,7 +50,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: 34px 30px;
   width: min(420px, 92vw);
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
 }
 
 .logo {
@@ -53,6 +58,7 @@ button { font-family: inherit; cursor: pointer; }
   margin: 0 0 4px;
   color: var(--gold-bright);
   letter-spacing: 0.5px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 .logo span { color: var(--cream); font-weight: 300; }
 .tagline { color: #b9c9bb; margin: 0 0 22px; font-size: 0.95rem; }
@@ -86,7 +92,7 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 600;
   transition: all .15s;
 }
-.mode-btn.active { background: var(--gold); color: #1b1410; }
+.mode-btn.active { background: var(--gold); color: #1b1410; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
 
 .lobby-actions { display: flex; flex-direction: column; gap: 12px; }
 
@@ -96,13 +102,22 @@ button { font-family: inherit; cursor: pointer; }
   border: none;
   font-weight: 700;
   font-size: 0.95rem;
-  transition: transform .1s, filter .15s;
+  transition: transform .1s, filter .15s, box-shadow .15s;
 }
-.btn:active { transform: scale(0.97); }
-.btn-primary { background: linear-gradient(180deg, var(--gold-bright), var(--gold)); color: #21160a; }
-.btn-secondary { background: rgba(255,255,255,0.08); color: var(--cream); border: 1px solid rgba(255,255,255,0.2); }
+.btn:active { transform: translateY(1px) scale(0.98); }
+.btn-primary {
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  color: #21160a;
+  box-shadow: 0 3px 0 var(--gold-dim), 0 8px 16px rgba(0,0,0,0.35);
+}
+.btn-secondary {
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  color: var(--cream);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+}
 .btn-ghost { background: transparent; color: #9fc0a8; margin-top: 16px; text-decoration: underline; }
-.btn-danger { background: var(--danger); color: white; }
+.btn-danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #7a231c; }
 .btn:hover { filter: brightness(1.08); }
 
 .divider { display: flex; align-items: center; color: #6f8d76; font-size: 0.8rem; margin: 4px 0; }
@@ -143,8 +158,6 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
 }
 
-/* Layout do jogo: por padrão (mobile) empilha mesa -> barra de ações;
-   o chat fica fora do fluxo (position: fixed, ver .chat-panel) */
 .game-layout {
   flex: 1;
   min-height: 0;
@@ -159,44 +172,78 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
-  background: rgba(0,0,0,0.35);
+  padding: 10px 18px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.3));
+  border-bottom: 1px solid rgba(216,178,94,0.25);
   z-index: 5;
 }
 .score-box { display: flex; align-items: center; gap: 10px; font-weight: 700; }
 .score-team { display: flex; flex-direction: column; align-items: center; min-width: 46px; }
-.score-label { font-size: 0.6rem; color: #b9c9bb; text-transform: uppercase; }
-.score-value { font-size: 1.5rem; color: var(--gold-bright); }
+.score-label { font-size: 0.6rem; color: #b9c9bb; text-transform: uppercase; letter-spacing: 0.5px; }
+.score-value {
+  font-size: 1.6rem;
+  color: var(--gold-bright);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
 .score-vs { color: #6f8d76; font-size: 0.8rem; }
 
 .stake-box {
-  background: var(--gold);
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
   color: #21160a;
-  padding: 6px 14px;
+  padding: 7px 16px;
   border-radius: 20px;
   font-weight: 800;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  box-shadow: 0 3px 0 var(--gold-dim), 0 4px 10px rgba(0,0,0,0.4);
 }
 
-/* Vira, agora exibida no meio da mesa junto às cartas jogadas */
-.vira-display { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+/* ---------------------------------------------------------------- */
+/* Vira — pilha de baralho num canto estratégico da mesa              */
+/* ---------------------------------------------------------------- */
+.vira-display {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.vira-stack-back, .vira-stack-back2 {
+  position: absolute;
+  top: 0; left: 0;
+  width: 58px; height: 82px;
+  border-radius: 8px;
+  background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+.vira-stack-back  { transform: rotate(-9deg) translate(-3px, 2px); }
+.vira-stack-back2 { transform: rotate(6deg) translate(3px, 3px); }
 .vira-label {
-  font-size: 0.7rem;
-  color: var(--gold-bright);
+  font-size: 0.65rem;
+  color: var(--ink);
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-weight: 700;
+  font-weight: 800;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  padding: 2px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 .mini-card {
-  width: 62px; height: 88px;
-  background: white;
+  position: relative;
+  width: 58px; height: 82px;
+  background: linear-gradient(150deg, #ffffff 0%, #f0f0f0 60%, #e4e4e4 100%);
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 1.3rem;
+  font-weight: 800; font-size: 1.2rem;
   color: var(--ink);
-  box-shadow: 0 0 0 2px var(--gold-bright), 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 2px var(--gold-bright), 0 6px 14px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.7) inset;
+  transform: rotate(-2deg);
 }
 .mini-card.red { color: var(--red); }
 
@@ -205,15 +252,27 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
   background:
     radial-gradient(ellipse at center, var(--felt-light) 0%, var(--felt) 55%, var(--felt-dark) 100%);
-  border-top: 6px solid #08210f;
-  overflow: hidden;
+  border-top: 6px solid var(--wood);
+  box-shadow:
+    inset 0 0 90px rgba(0,0,0,0.55),
+    inset 0 0 24px rgba(0,0,0,0.4);
+  overflow: visible;
   min-height: 0;
+  perspective: 1200px;
 }
 .felt::before {
   content: "";
-  position: absolute; inset: 20px;
-  border: 3px solid rgba(216,178,94,0.3);
+  position: absolute; inset: 18px;
+  border: 3px solid rgba(216,178,94,0.32);
   border-radius: 40px;
+  box-shadow: 0 0 18px rgba(216,178,94,0.12) inset;
+  pointer-events: none;
+}
+.felt::after {
+  /* vinheta pra dar profundidade à mesa */
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.45) 100%);
   pointer-events: none;
 }
 
@@ -223,21 +282,26 @@ button { font-family: inherit; cursor: pointer; }
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  z-index: 3;
 }
 .seat-top { top: 8px; left: 50%; transform: translateX(-50%); }
 .seat-left { top: 50%; left: 8px; transform: translateY(-50%); }
 .seat-right { top: 50%; right: 8px; transform: translateY(-50%); }
-.seat-bottom { bottom: 6px; left: 50%; transform: translateX(-50%); }
+.seat-bottom { bottom: 6px; left: 50%; transform: translateX(-50%); z-index: 3; }
 
 .seat-name {
-  background: rgba(0,0,0,0.4);
-  padding: 3px 10px;
+  background: rgba(0,0,0,0.45);
+  padding: 4px 12px;
   border-radius: 10px;
   font-size: 0.75rem;
   white-space: nowrap;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 .seat-name.me { color: var(--gold-bright); font-weight: 700; }
-.seat-name.active-turn { outline: 2px solid var(--gold-bright); }
+.seat-name.active-turn {
+  outline: 2px solid var(--gold-bright);
+  box-shadow: 0 0 12px rgba(240,205,124,0.6);
+}
 
 .opp-hand { display: flex; gap: -6px; }
 .opp-hand .card-back {
@@ -246,6 +310,7 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 5px;
   background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
   border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
 }
 .opp-hand .card-back:first-child { margin-left: 0; }
 .opp-hand.vertical { flex-direction: column; }
@@ -260,11 +325,7 @@ button { font-family: inherit; cursor: pointer; }
   align-items: center;
   justify-content: center;
   gap: 18px;
-}
-.center-row {
-  display: flex;
-  align-items: center;
-  gap: 32px;
+  z-index: 2;
 }
 .table-cards {
   display: grid;
@@ -279,135 +340,234 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   width: 74px; height: 104px;
 }
-.played-pos-top    { top: 0; left: 41px; }
-.played-pos-left   { top: 56px; left: 0; }
-.played-pos-right  { top: 56px; left: 82px; }
-.played-pos-bottom { top: 112px; left: 41px; }
+.played-pos-top    { top: 0; left: 41px; transform: rotate(-3deg); }
+.played-pos-left   { top: 56px; left: 0; transform: rotate(4deg); }
+.played-pos-right  { top: 56px; left: 82px; transform: rotate(-4deg); }
+.played-pos-bottom { top: 112px; left: 41px; transform: rotate(2deg); }
 
 .banner {
   min-height: 26px;
   font-weight: 800;
   color: var(--gold-bright);
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
   text-align: center;
   font-size: 1rem;
+  background: rgba(0,0,0,0.3);
+  padding: 4px 14px;
+  border-radius: 10px;
 }
 
+/* ---------------------------------------------------------------- */
+/* Cartas — visual 3D                                                 */
+/* ---------------------------------------------------------------- */
 .card {
+  position: relative;
   width: 74px; height: 104px;
-  background: white;
-  border-radius: 8px;
+  background: linear-gradient(150deg, #ffffff 0%, #f2f2f2 55%, #e6e6e6 100%);
+  border-radius: 9px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: var(--ink);
   font-weight: 800;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 2px 3px rgba(0,0,0,0.15),
+    0 6px 14px rgba(0,0,0,0.45);
   user-select: none;
-  transition: transform .15s;
-  border: 1px solid rgba(0,0,0,0.1);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  border: 1px solid rgba(0,0,0,0.12);
+  transform-style: preserve-3d;
 }
 .card.red { color: var(--red); }
+.card .card-face { display: flex; flex-direction: column; align-items: center; }
 .card .rank { font-size: 1.4rem; line-height: 1; }
 .card .suit { font-size: 1.6rem; line-height: 1; }
-.card.manilha { box-shadow: 0 0 0 2px var(--gold-bright), 0 3px 10px rgba(0,0,0,0.5); }
+.card.manilha {
+  box-shadow:
+    0 0 0 2px var(--gold-bright),
+    0 2px 3px rgba(0,0,0,0.15),
+    0 8px 18px rgba(216,178,94,0.35);
+}
 .card.facedown {
   background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
 }
 
-/* Mão do jogador: cartas bem maiores, ocupando bom espaço da tela */
+/* índices de canto, tipo carta de baralho de verdade */
+.card-corner {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.62rem;
+  line-height: 1;
+  font-weight: 800;
+  opacity: 0.85;
+}
+.corner-tl { top: 5px; left: 6px; }
+.corner-br { bottom: 5px; right: 6px; transform: rotate(180deg); }
+
+/* Mão do jogador: sobreposta na mesa, em leque, cartas maiores */
 .my-hand {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 18px;
-  padding: 16px 16px 20px;
   z-index: 4;
+  perspective: 900px;
 }
 .my-hand .card {
   cursor: pointer;
-  width: clamp(100px, 14vw, 170px);
-  height: clamp(140px, 19.6vw, 238px);
+  width: clamp(96px, 13vw, 160px);
+  height: clamp(134px, 18.2vw, 224px);
   border-radius: 12px;
+  margin-left: clamp(-48px, -6vw, -30px);
 }
-.my-hand .card .rank { font-size: clamp(1.6rem, 2.6vw, 2.6rem); }
-.my-hand .card .suit { font-size: clamp(1.9rem, 3vw, 3rem); }
-.my-hand .card:hover { transform: translateY(-14px); }
-.my-hand .card.selected { transform: translateY(-22px); box-shadow: 0 0 0 4px var(--gold-bright), 0 8px 20px rgba(0,0,0,0.5); }
-.my-hand .card.disabled { opacity: 0.4; cursor: not-allowed; }
+.my-hand .card:first-child { margin-left: 0; }
+.my-hand .card .rank { font-size: clamp(1.5rem, 2.4vw, 2.4rem); }
+.my-hand .card .suit { font-size: clamp(1.8rem, 2.8vw, 2.8rem); }
+.my-hand .card .card-corner { font-size: clamp(0.7rem, 1vw, 0.85rem); }
+
+/* leque: rotação e leve elevação por posição */
+.my-hand .card:nth-child(1) { transform: rotate(-9deg) translateY(10px); transform-origin: bottom center; z-index: 1; }
+.my-hand .card:nth-child(2) { transform: rotate(0deg) translateY(-6px); transform-origin: bottom center; z-index: 2; }
+.my-hand .card:nth-child(3) { transform: rotate(9deg) translateY(10px); transform-origin: bottom center; z-index: 1; }
+
+.my-hand .card:nth-child(1):hover:not(.disabled) { transform: rotate(-9deg) translateY(-16px) scale(1.05); z-index: 5; }
+.my-hand .card:nth-child(2):hover:not(.disabled) { transform: rotate(0deg) translateY(-26px) scale(1.05); z-index: 5; }
+.my-hand .card:nth-child(3):hover:not(.disabled) { transform: rotate(9deg) translateY(-16px) scale(1.05); z-index: 5; }
+.my-hand .card:hover:not(.disabled) {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 14px 26px rgba(0,0,0,0.55);
+}
+
+.my-hand .card.selected {
+  box-shadow: 0 0 0 4px var(--gold-bright), 0 12px 24px rgba(0,0,0,0.55) !important;
+  z-index: 6 !important;
+}
+.my-hand .card:nth-child(1).selected { transform: rotate(-9deg) translateY(-22px) scale(1.06); }
+.my-hand .card:nth-child(2).selected { transform: rotate(0deg) translateY(-32px) scale(1.06); }
+.my-hand .card:nth-child(3).selected { transform: rotate(9deg) translateY(-22px) scale(1.06); }
+
+/* cartas "não é sua vez": continuam legíveis, só ficam sóbrias */
+.my-hand .card.disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.35) brightness(0.82);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.5) inset,
+    0 4px 10px rgba(0,0,0,0.4);
+}
+.my-hand .card.disabled::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: rgba(6, 20, 12, 0.28);
+  border-radius: inherit;
+}
 
 .actions-bar {
   display: flex;
   gap: 6px;
   padding: 8px 10px 12px;
   overflow-x: auto;
-  background: rgba(0,0,0,0.35);
+  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45));
+  border-top: 1px solid rgba(216,178,94,0.2);
 }
 .action-btn {
   flex-shrink: 0;
-  padding: 10px 14px;
+  padding: 11px 14px;
   border-radius: 10px;
   border: none;
-  background: var(--gold);
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
   color: #21160a;
   font-weight: 800;
   font-size: 0.8rem;
   letter-spacing: 0.5px;
   opacity: 1;
-  transition: opacity .15s, transform .1s;
+  box-shadow: 0 3px 0 var(--gold-dim), 0 5px 10px rgba(0,0,0,0.35);
+  transition: opacity .15s, transform .1s, box-shadow .1s;
 }
-.action-btn:active { transform: scale(0.95); }
-.action-btn.danger { background: var(--danger); color: white; }
-.action-btn.icon { background: rgba(255,255,255,0.12); color: var(--cream); }
-.action-btn:disabled { opacity: 0.3; pointer-events: none; }
-.action-btn.esconder-active { outline: 2px solid var(--gold-bright); }
+.action-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--gold-dim), 0 2px 4px rgba(0,0,0,0.3); }
+.action-btn.danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #7a231c, 0 5px 10px rgba(0,0,0,0.35); }
+.action-btn.icon { background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)); color: var(--cream); box-shadow: 0 3px 0 rgba(0,0,0,0.3); }
+.action-btn:disabled { opacity: 0.35; pointer-events: none; box-shadow: none; transform: none; }
+.action-btn.esconder-active { outline: 2px solid var(--gold-bright); box-shadow: 0 0 12px rgba(240,205,124,0.7); }
 
 /* pedido de truco */
 .call-overlay {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(2px);
   display: flex; align-items: center; justify-content: center;
   z-index: 20;
 }
 .call-overlay.hidden { display: none; }
 .call-box {
-  background: var(--panel);
+  background: linear-gradient(180deg, #16452c, var(--panel));
   border: 1px solid var(--gold);
   border-radius: 16px;
   padding: 24px;
   text-align: center;
   width: min(340px, 88vw);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
 .call-box p { font-size: 1.05rem; margin-bottom: 18px; color: var(--gold-bright); font-weight: 700; }
 .call-buttons { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .call-buttons .btn { flex: 1; min-width: 90px; }
 
-/* chat */
+/* ---------------------------------------------------------------- */
+/* Chat                                                               */
+/* ---------------------------------------------------------------- */
 .chat-panel {
   position: fixed;
   right: 10px; bottom: 90px;
-  width: min(280px, 80vw);
+  width: min(280px, calc(100vw - 20px));
   height: 320px;
-  background: rgba(10,30,18,0.95);
-  border: 1px solid rgba(216,178,94,0.3);
+  background: linear-gradient(180deg, rgba(18,45,29,0.97), rgba(6,20,12,0.97));
+  border: 1px solid rgba(216,178,94,0.4);
   border-radius: 14px;
   display: flex;
   flex-direction: column;
   z-index: 15;
   overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.55);
 }
 .chat-panel.hidden { display: none; }
+.chat-header {
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--gold-bright);
+  background: rgba(0,0,0,0.3);
+  border-bottom: 1px solid rgba(216,178,94,0.25);
+  letter-spacing: 0.3px;
+}
 .chat-messages { flex: 1; overflow-y: auto; padding: 10px; font-size: 0.8rem; }
-.chat-messages div { margin-bottom: 6px; }
+.chat-messages div {
+  margin-bottom: 8px;
+  background: rgba(255,255,255,0.06);
+  padding: 6px 9px;
+  border-radius: 8px;
+  word-break: break-word;
+}
 .chat-messages b { color: var(--gold-bright); }
-.emoji-row { display: flex; justify-content: space-around; padding: 4px 6px; border-top: 1px solid rgba(255,255,255,0.1); }
-.emoji-btn { background: none; border: none; font-size: 1.2rem; }
+.emoji-row { display: flex; justify-content: space-around; padding: 6px; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.15); }
+.emoji-btn { background: none; border: none; font-size: 1.2rem; transition: transform .1s; }
+.emoji-btn:hover { transform: scale(1.25); }
 .chat-input-row { display: flex; border-top: 1px solid rgba(255,255,255,0.1); }
 .chat-input-row input {
-  flex: 1; border: none; background: transparent; color: var(--cream); padding: 8px;
+  flex: 1; min-width: 0; border: none; background: rgba(0,0,0,0.2); color: var(--cream); padding: 10px;
 }
-.chat-input-row button { background: var(--gold); border: none; padding: 0 14px; font-weight: 700; color: #21160a; }
+.chat-input-row input::placeholder { color: rgba(244,236,216,0.45); }
+.chat-input-row button {
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  border: none; padding: 0 14px; font-weight: 700; color: #21160a;
+}
 
 #emoji-layer {
   position: fixed; inset: 0; pointer-events: none; z-index: 25;
@@ -416,6 +576,7 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   font-size: 2rem;
   animation: floatUp 1.6s ease-out forwards;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));
 }
 @keyframes floatUp {
   0% { opacity: 0; transform: translateY(0) scale(0.5); }
@@ -425,16 +586,19 @@ button { font-family: inherit; cursor: pointer; }
 
 /* animação de carta jogada */
 @keyframes dropIn {
-  from { opacity: 0; transform: scale(0.6) translateY(-20px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: scale(0.5) translateY(-40px) rotate(0deg); }
+  to { opacity: 1; transform: scale(1) translateY(0) rotate(var(--rot, 0deg)); }
 }
-.played-card .card { animation: dropIn .25s ease-out; }
+.played-pos-top    .card { animation: dropIn .28s ease-out; --rot: -3deg; }
+.played-pos-left   .card { animation: dropIn .28s ease-out; --rot: 4deg; }
+.played-pos-right  .card { animation: dropIn .28s ease-out; --rot: -4deg; }
+.played-pos-bottom .card { animation: dropIn .28s ease-out; --rot: 2deg; }
 
 @keyframes dealCard {
-  from { opacity: 0; transform: translateY(-40px) scale(0.7); }
+  from { opacity: 0; transform: translateY(-50px) scale(0.7) rotate(0deg); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-.my-hand .card { animation: dealCard .3s ease-out backwards; }
+.my-hand .card { animation: dealCard .35s ease-out backwards; }
 .my-hand .card:nth-child(1) { animation-delay: 0s; }
 .my-hand .card:nth-child(2) { animation-delay: .08s; }
 .my-hand .card:nth-child(3) { animation-delay: .16s; }
@@ -443,16 +607,17 @@ button { font-family: inherit; cursor: pointer; }
 /* Responsivo                                                         */
 /* ---------------------------------------------------------------- */
 @media (max-width: 480px) {
-  .my-hand { gap: 8px; }
+  .my-hand .card { margin-left: -34px; }
   .action-btn { padding: 9px 10px; font-size: 0.72rem; }
   .score-value { font-size: 1.2rem; }
   .table-cards { transform: scale(0.7); }
+  .vira-display { top: 10px; left: 10px; }
+  .mini-card, .vira-stack-back, .vira-stack-back2 { width: 44px; height: 62px; font-size: 0.95rem; }
 }
 
 @media (min-width: 900px) {
   .table-wrap { max-width: none; margin: 0; }
 
-  /* 3 colunas simétricas: ações | mesa (centralizada de verdade) | chat */
   .game-layout { flex-direction: row; }
   .game-layout .actions-bar { order: 0; }
   .game-layout .felt-wrap { order: 1; }
@@ -467,28 +632,29 @@ button { font-family: inherit; cursor: pointer; }
     justify-content: center;
     gap: 14px;
     padding: 20px 16px;
+    border-top: none;
+    border-right: 1px solid rgba(216,178,94,0.2);
   }
   .action-btn {
     width: 100%;
-    padding: 20px 10px;
+    padding: 18px 10px;
     font-size: 1rem;
   }
 
   .felt-wrap { flex: 1; min-width: 0; }
   .felt { min-height: 520px; }
 
-  /* chat sempre visível como coluna, com a MESMA largura da barra de ações,
-     pra manter o campo de fato centralizado na tela */
   .chat-panel,
   .chat-panel.hidden {
     display: flex;
     position: static;
-    width: clamp(190px, 15vw, 240px);
+    width: clamp(200px, 15vw, 250px);
     height: auto;
     flex-shrink: 0;
     border-radius: 0;
     border: none;
     border-left: 1px solid rgba(216,178,94,0.3);
+    box-shadow: none;
   }
   #btn-toggle-chat { display: none; }
 }

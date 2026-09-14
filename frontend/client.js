@@ -249,9 +249,14 @@ function buildCardEl(card, manilhaRank) {
   const el = document.createElement('div');
   el.className = 'card ' + (SUIT_COLOR[card.suit] || '');
   if (card.rank === manilhaRank) el.classList.add('manilha');
+  const symbol = SUIT_SYMBOLS[card.suit];
   el.innerHTML = `
-    <div class="rank">${card.rank}</div>
-    <div class="suit">${SUIT_SYMBOLS[card.suit]}</div>
+    <div class="card-corner corner-tl"><span>${card.rank}</span>${symbol}</div>
+    <div class="card-face">
+      <div class="rank">${card.rank}</div>
+      <div class="suit">${symbol}</div>
+    </div>
+    <div class="card-corner corner-br"><span>${card.rank}</span>${symbol}</div>
   `;
   el.dataset.cardId = card.id;
   return el;

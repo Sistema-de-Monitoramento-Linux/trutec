@@ -96,28 +96,31 @@
               <div class="seat-name" id="name-right">—</div>
             </div>
 
+            <!-- vira: canto da mesa, estilo pilha de baralho -->
+            <div class="vira-display">
+              <div class="vira-stack-back"></div>
+              <div class="vira-stack-back2"></div>
+              <div id="vira-card" class="mini-card"></div>
+              <div class="vira-label">Vira</div>
+            </div>
+
             <div class="center-area">
-              <div class="center-row">
-                <div class="vira-display">
-                  <div class="vira-label">Vira</div>
-                  <div id="vira-card" class="mini-card"></div>
-                </div>
-                <div id="table-cards" class="table-cards"></div>
-              </div>
+              <div id="table-cards" class="table-cards"></div>
               <div id="banner" class="banner"></div>
             </div>
 
             <div id="seat-bottom" class="seat seat-bottom">
               <div class="seat-name me" id="name-bottom">Você</div>
             </div>
-          </div>
 
-          <!-- mão do jogador -->
-          <div class="my-hand" id="my-hand"></div>
+            <!-- mão do jogador: sobreposta direto no feltro -->
+            <div class="my-hand" id="my-hand"></div>
+          </div>
         </div>
 
         <!-- chat (coluna direita no desktop / popup no mobile) -->
         <div id="chat-panel" class="chat-panel hidden">
+          <div class="chat-header">💬 Chat da mesa</div>
           <div class="chat-messages" id="chat-messages"></div>
           <div class="emoji-row">
             <button class="emoji-btn">👍</button>
