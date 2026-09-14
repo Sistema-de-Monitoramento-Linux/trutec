@@ -172,7 +172,7 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 18px;
+  padding: 10px 18px 10px 82px;
   background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.3));
   border-bottom: 1px solid rgba(216,178,94,0.25);
   z-index: 5;
@@ -571,6 +571,25 @@ button { font-family: inherit; cursor: pointer; }
 .action-btn.icon { background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)); color: var(--cream); box-shadow: 0 3px 0 rgba(0,0,0,0.3); }
 .action-btn:disabled { opacity: 0.35; pointer-events: none; box-shadow: none; transform: none; }
 .action-btn.esconder-active { outline: 2px solid var(--gold-bright); box-shadow: 0 0 12px rgba(240,205,124,0.7); }
+
+/* botão de sair da sala — fixo no canto superior esquerdo da tela */
+.exit-room-btn {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 12;
+  background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05));
+  color: var(--cream);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.3), 0 6px 14px rgba(0,0,0,0.35);
+  transition: filter .15s, transform .1s;
+}
+.exit-room-btn:hover { filter: brightness(1.12); }
+.exit-room-btn:active { transform: translateY(1px); }
 
 /* pedido de truco */
 .call-overlay {

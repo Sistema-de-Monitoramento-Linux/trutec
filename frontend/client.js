@@ -307,25 +307,37 @@ function updateActionButtons(state) {
   const canCall = isMyTurn && !state.pendingCall && !state.gameOver;
   const nextLevelByStake = { 1: 'truco', 3: 'seis', 6: 'nove', 9: 'doze' };
   const nextLevel = nextLevelByStake[state.stake];
-  const lastRaiserIsMyTeam = false; // servidor valida de qualquer forma
 
-  ['truco', 'seis', 'nove', 'doze'].forEach(level => {
-    const btn = document.getElementById(`btn-${level}`);
-    btn.disabled = !(canCall && nextLevel === level);
-  });
+  const btnTruco = document.getElementById('btn-truco');
+  if (nextLevel) {
+    btnTruco.textContent = nextLevel.toUpperCase();
+    btnTruco.dataset.level = nextLevel;
+    btnTruco.disabled = !canCall;
+  } else {
+    btnTruco.disabled = true;
+  }
 
   document.getElementById('btn-correr').disabled = !isMyTurn || !!state.pendingCall || state.gameOver;
   document.getElementById('btn-esconder').disabled = !isMyTurn || !!state.pendingCall || state.gameOver;
 }
 
-['truco', 'seis', 'nove', 'doze'].forEach(level => {
-  document.getElementById(`btn-${level}`).addEventListener('click', () => {
-    socket.emit('call_truco', { level });
-  });
+document.getElementById('btn-truco').addEventListener('click', () => {
+  const level = document.getElementById('btn-truco').dataset.level;
+  if (!level) return;
+  socket.emit('call_truco', { level });
 });
 
 document.getElementById('btn-correr').addEventListener('click', () => {
   socket.emit('run_away');
+});
+
+// ------------------------------------------------------------------
+// Sair da sala
+// ------------------------------------------------------------------
+document.getElementById('btn-exit-room').addEventListener('click', () => {
+  if (confirm('Tem certeza que deseja sair da sala?')) {
+    location.reload();
+  }
 });
 
 // ------------------------------------------------------------------
