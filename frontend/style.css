@@ -100,7 +100,7 @@ button { font-family: inherit; cursor: pointer; }
 .lobby-stack {
   position: absolute;
   top: 50%;
-  right: clamp(12px, 3vw, 48px);
+  left: clamp(12px, 3vw, 48px);
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
