@@ -858,212 +858,88 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* ------------------------------------------------------------------ */
-/* Personagens em 3D nas cadeiras — cada um "sentado" ao redor da mesa, */
-/* apoiados no mesmo rig de perspectiva usado pelas mãos de cartas.     */
-/* Como a arte é 2D (chapada), a sensação de volume vem de: sombra de   */
-/* contato no feltro, luz/sombra degradê por cima da imagem (blend      */
-/* overlay/multiply) e inclinação em X/Y coerente com o ângulo de       */
-/* visão de cada cadeira.                                               */
+/* Avatares redondos nas cadeiras — visual limpo e simples: retrato     */
+/* circular com auréola escura atrás (como um "spot" recortado no      */
+/* fundo), parado, sem inclinação 3D. Ganha um anel dourado quando é a  */
+/* vez daquele jogador.                                                 */
 /* ------------------------------------------------------------------ */
 .seat-figure {
   position: relative;
-  width: 74px;
-  height: 74px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  transform-style: preserve-3d;
-  animation: figureBob 3.6s ease-in-out infinite;
+  background: radial-gradient(circle, var(--felt-dark) 0%, rgba(8,27,64,0) 72%);
+  box-shadow: 0 0 0 14px rgba(0,0,0,0.22), 0 6px 14px rgba(0,0,0,0.5);
+  transition: box-shadow .25s ease, transform .25s ease;
 }
 
-/* sombra de contato: ancora o personagem no feltro, como se a luz de
-   cima estivesse projetando ele pra baixo, na direção do centro da mesa */
-.seat-shadow {
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  width: 60%;
-  height: 14px;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.28) 55%, transparent 80%);
-  border-radius: 50%;
-  transform: translateX(-50%) translateZ(-1px) scale(1);
-  filter: blur(1px);
-  transition: opacity .3s ease, transform .3s ease;
-  z-index: 0;
-}
+.seat-shadow { display: none; }
 
 .seat-avatar-img {
   position: relative;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  z-index: 1;
-  /* recorta uma sombra projetada seguindo o alfa do próprio desenho,
-     em vez de uma caixa retangular — dá uma leitura de "peso" real */
-  filter:
-    drop-shadow(0 10px 8px rgba(0,0,0,0.45))
-    drop-shadow(0 2px 2px rgba(0,0,0,0.35));
-  transition: filter .3s ease, transform .3s ease;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fff8f0;
+  background: #fff8f0;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.45);
 }
 
-/* luz vinda de cima da mesa (spot central) + sombra de base, aplicadas
-   como camadas de gradiente com blend mode por cima do desenho chapado */
-.seat-figure::before,
-.seat-figure::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  border-radius: 50% 50% 40% 40%;
-}
-.seat-figure::before {
-  /* brilho superior esquerdo, tipo reflexo de plástico/verniz */
-  background: radial-gradient(circle at 34% 18%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.14) 26%, transparent 55%);
-  mix-blend-mode: overlay;
-  opacity: 0.85;
-}
-.seat-figure::after {
-  /* sombra inferior, degradê pra dar volume e "assentar" o corpo */
-  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 30%, transparent 60%);
-  mix-blend-mode: multiply;
-  opacity: 0.7;
-}
-
-@keyframes figureBob {
-  0%, 100% { transform: translateY(0) rotateZ(0deg); }
-  50% { transform: translateY(-3px) rotateZ(0.6deg); }
-}
-
-/* Cadeira de cima: personagem reclinado levemente pra trás, como se
-   estivesse debruçado sobre a mesa olhando as próprias cartas. */
-.seat-top .seat-figure {
-  transform-origin: 50% 100%;
-  transform: rotateX(22deg) translateZ(6px);
-}
-.seat-top .seat-figure .seat-avatar-img { transform-origin: 50% 100%; }
-
-/* Cadeira da esquerda: inclinado pro lado, "debruçado" na direção do
-   centro da mesa, igual o ângulo já usado nas cartas dela. */
-.seat-left .seat-figure {
-  transform-origin: 100% 100%;
-  transform: rotateY(-22deg) rotateZ(-2deg) translateZ(4px);
-}
-
-/* Cadeira da direita: espelhado. */
-.seat-right .seat-figure {
-  transform-origin: 0% 100%;
-  transform: rotateY(22deg) rotateZ(2deg) translateZ(4px);
-}
-
-/* Quando é a vez do jogador, o personagem "acorda": levanta, ganha luz
-   de destaque e a sombra embaixo dele se intensifica, puxando o olhar. */
+/* Quando é a vez do jogador: anel dourado e leve destaque. */
 .seat-top.active-seat .seat-figure,
 .seat-left.active-seat .seat-figure,
 .seat-right.active-seat .seat-figure {
-  transform: rotateX(0deg) rotateY(0deg) translateY(-6px) translateZ(14px) scale(1.08);
-}
-.active-seat .seat-avatar-img {
-  filter:
-    drop-shadow(0 14px 10px rgba(0,0,0,0.5))
-    drop-shadow(0 0 14px rgba(255,248,240,0.75));
-}
-.active-seat .seat-shadow {
-  opacity: 1;
-  transform: translateX(-50%) translateZ(-1px) scale(1.25);
+  transform: scale(1.08);
+  box-shadow: 0 0 0 14px rgba(0,0,0,0.22), 0 0 0 3px var(--gold-bright), 0 0 18px rgba(255,248,240,0.7), 0 6px 14px rgba(0,0,0,0.5);
 }
 
-/* Meu personagem: em primeiro plano, visto "de baixo", maior e mais
-   próximo da câmera — como se fosse o seu próprio corpo sentado à mesa,
-   com as cartas na mão apoiadas à sua frente por cima dele. */
+/* Meu avatar: um pouco maior, em primeiro plano. */
 .seat-figure-me {
-  width: 128px;
-  height: 128px;
-  transform: rotateX(-8deg) translateZ(10px);
-  transform-origin: 50% 100%;
-  animation: figureBob 4.2s ease-in-out infinite;
-}
-.seat-figure-me .seat-avatar-img {
-  filter:
-    drop-shadow(0 16px 14px rgba(0,0,0,0.55))
-    drop-shadow(0 3px 3px rgba(0,0,0,0.4));
-}
-.seat-shadow-me {
-  width: 70%;
-  height: 20px;
-  bottom: -4px;
+  width: 88px;
+  height: 88px;
 }
 
 @media (max-width: 720px) {
-  .seat-figure { width: 54px; height: 54px; }
-  .seat-figure-me { width: 92px; height: 92px; }
+  .seat-figure { width: 48px; height: 48px; }
+  .seat-figure-me { width: 68px; height: 68px; }
 }
 
-/* Mãos dos oponentes em 3D real — cada lado inclinado no eixo certo,
-   como se você estivesse de frente pra eles do seu lado da mesa. */
-.opp-hand { display: flex; gap: -6px; transform-style: preserve-3d; }
+/* Mãos dos oponentes: leque pequeno e simples, sem inclinação 3D — a
+   mesma ideia da sua própria mão, só que menor e viradas pra baixo. */
+.opp-hand { display: flex; }
 .opp-hand .card-back {
-  width: 58px; height: 82px;
-  margin-left: -28px;
+  width: 44px; height: 62px;
+  margin-left: -24px;
   border-radius: 6px;
   background:
     repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 8px),
     repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 8px),
     linear-gradient(135deg, var(--card-back), var(--card-back-dark));
   border: 2px solid #fff8f0;
-  box-shadow: 0 8px 14px rgba(0,0,0,0.5);
-  transition: transform .5s cubic-bezier(.34, 1.56, .64, 1), box-shadow .4s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  transition: transform .3s ease, box-shadow .3s ease;
 }
-.opp-hand .card-back:nth-child(1) { transition-delay: 0s; }
-.opp-hand .card-back:nth-child(2) { transition-delay: .07s; }
-.opp-hand .card-back:nth-child(3) { transition-delay: .14s; }
 .opp-hand .card-back:first-child { margin-left: 0; }
-.opp-hand.vertical { flex-direction: column; }
-.opp-hand.vertical .card-back { margin-left: 0; margin-top: -42px; }
-.opp-hand.vertical .card-back:first-child { margin-top: 0; }
+.opp-hand.vertical { flex-direction: row; }
+.opp-hand.vertical .card-back { margin-left: -24px; margin-top: 0; }
+.opp-hand.vertical .card-back:first-child { margin-left: 0; }
 
-/* adversário/parceiro à sua frente (seat-top): esse é sempre o seu
-   parceiro (dupla sentada de frente um pro outro). Mão dele descansa
-   deitada na mesa, recuando na sua direção — é você quem "recebe" essa
-   carta virada pra você. */
-.seat-top .opp-hand .card-back {
-  transform: rotateX(72deg) translateZ(4px) scale(0.92);
-  transform-origin: 50% 100%;
-}
+.opp-hand .card-back:nth-child(1) { transform: rotate(-8deg) translateY(2px); }
+.opp-hand .card-back:nth-child(2) { transform: rotate(0deg); }
+.opp-hand .card-back:nth-child(3) { transform: rotate(8deg) translateY(2px); }
 
-/* Esquerda e direita são dupla um do outro: a mão de quem tá à esquerda
-   descansa deitada apontando pro lado da direita (onde tá o parceiro
-   dele), e vice-versa — em vez de ficar "olhando" pra você. */
-.seat-left .opp-hand .card-back {
-  transform: rotateY(-68deg) rotateZ(-14deg) translateZ(4px) scale(0.92);
-  transform-origin: 100% 50%;
+/* Quando é a vez do jogador, o leque só sobe um pouco e ganha destaque —
+   sem virar, sem inclinar, mantendo o mesmo visual simples. */
+.opp-hand.active-turn .card-back {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.7);
 }
-
-.seat-right .opp-hand .card-back {
-  transform: rotateY(68deg) rotateZ(14deg) translateZ(4px) scale(0.92);
-  transform-origin: 0% 50%;
-}
-
-/* Quando é a vez do jogador, a mão "levanta" da mesa: em vez de ficar
-   achatada de frente pra câmera, as cartas ficam de pé, de ladinho —
-   como um leque segurado na mão. */
-.seat-top .opp-hand.active-turn .card-back {
-  transform: rotateX(10deg) rotateY(0deg) translateY(-12px) translateZ(12px) scale(1.1);
-}
-
-.seat-left .opp-hand.active-turn .card-back {
-  transform: rotateX(6deg) rotateY(-26deg) translateY(-12px) translateZ(12px) scale(1.1);
-}
-
-.seat-right .opp-hand.active-turn .card-back {
-  transform: rotateX(6deg) rotateY(26deg) translateY(-12px) translateZ(12px) scale(1.1);
-}
-
-.seat-top .opp-hand.active-turn .card-back,
-.seat-left .opp-hand.active-turn .card-back,
-.seat-right .opp-hand.active-turn .card-back {
-  box-shadow: 0 14px 26px rgba(0,0,0,0.55), 0 0 0 2px rgba(255,255,255,0.6);
-}
+.opp-hand.active-turn .card-back:nth-child(1) { transform: rotate(-8deg) translateY(-6px); }
+.opp-hand.active-turn .card-back:nth-child(2) { transform: rotate(0deg) translateY(-9px); }
+.opp-hand.active-turn .card-back:nth-child(3) { transform: rotate(8deg) translateY(-6px); }
 
 .center-area {
   position: absolute;
