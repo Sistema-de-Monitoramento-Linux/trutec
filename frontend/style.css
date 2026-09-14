@@ -111,7 +111,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .lobby-card {
-  background: var(--panel);
+  background: linear-gradient(165deg, #0a0805 0%, #050401 55%, #020200 100%);
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
   padding: 14px 24px;
