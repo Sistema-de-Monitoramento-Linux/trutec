@@ -601,6 +601,41 @@ button { font-family: inherit; cursor: pointer; }
   color: #fff8f0;
   opacity: 0.75;
 }
+.wp-team-a { color: var(--red); opacity: 1; font-weight: 700; }
+.wp-team-b { color: var(--wood-light); opacity: 1; font-weight: 700; }
+
+/* Botões de escolha de dupla no lobby (só o host vê/usa, no modo 2v2) */
+.wp-team-toggle {
+  display: flex;
+  gap: 6px;
+}
+.wp-team-btn {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.2);
+  color: #fff8f0;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.72rem;
+  opacity: 0.6;
+  transition: all .15s ease;
+}
+.wp-team-btn:active { transform: translateY(1px) scale(0.97); }
+.wp-team-btn.team-a.active {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff8f0;
+  opacity: 1;
+  box-shadow: 0 2px 6px rgba(209,10,30,0.5);
+}
+.wp-team-btn.team-b.active {
+  background: var(--wood-light);
+  border-color: var(--wood-light);
+  color: #fff8f0;
+  opacity: 1;
+  box-shadow: 0 2px 6px rgba(37,65,178,0.5);
+}
 
 .waiting-hint { font-size: 0.8rem; color: #fff8f0; }
 

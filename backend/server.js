@@ -160,8 +160,26 @@ class Room {
   }
 
   seatTeam(seat) {
-    if (this.mode === '1v1') return seat % 2;
-    return seat % 2; // 0,2 -> time 0 | 1,3 -> time 1
+    // O time de cada assento é o que está gravado no jogador (player.team).
+    // Por padrão, ao entrar na sala, o jogador recebe seat % 2 (ver
+    // joinRoomInternal), mas no modo 2v2 o host pode reorganizar as duplas
+    // livremente antes de iniciar a partida (ver evento 'set_player_team').
+    const p = this.playerBySeat(seat);
+    return p ? p.team : seat % 2;
+  }
+
+  // Quantos jogadores tem em cada time no momento (só faz sentido no 2v2).
+  teamCounts() {
+    const counts = [0, 0];
+    for (const p of this.players) counts[p.team]++;
+    return counts;
+  }
+
+  // Duplas prontas pra iniciar: no 2v2, exatamente 2 jogadores por time.
+  teamsReady() {
+    if (this.mode !== '2v2') return true;
+    const [a, b] = this.teamCounts();
+    return a === 2 && b === 2;
   }
 
   publicSummary() {
@@ -181,8 +199,10 @@ class Room {
       isPublic: this.isPublic,
       maxPlayers: this.maxPlayers,
       started: this.started,
-      // Sala cheia e ainda não iniciada = pronta pro host apertar "Iniciar".
-      canStart: !this.started && this.players.length === this.maxPlayers,
+      // Sala cheia, com duplas fechadas (2v2) e ainda não iniciada = pronta
+      // pro host apertar "Iniciar".
+      canStart: !this.started && this.players.length === this.maxPlayers && this.teamsReady(),
+      teamsReady: this.teamsReady(),
       players: this.players.map(p => ({
         seat: p.seat, name: p.name, team: p.team, connected: p.connected, character: p.character || null
       }))
@@ -515,10 +535,29 @@ io.on('connection', (socket) => {
     if (player.seat !== 0) return cb && cb({ ok: false, error: 'Só o host pode iniciar a partida.' });
     if (r.started) return cb && cb({ ok: false, error: 'A partida já começou.' });
     if (r.players.length < r.maxPlayers) return cb && cb({ ok: false, error: 'Aguardando mais jogadores entrarem.' });
+    if (!r.teamsReady()) return cb && cb({ ok: false, error: 'Ajuste as duplas (2 jogadores em cada) antes de iniciar.' });
 
     r.startGame();
     r.players.forEach(p => io.to(p.id).emit('game_start', r.redactedStateFor(p.seat)));
     r.broadcastState(io);
+    cb && cb({ ok: true });
+  });
+
+  // Host escolhe as duplas no 2v2, antes de iniciar a partida: arrasta/toca
+  // pra mover um jogador entre "Dupla 1" e "Dupla 2".
+  socket.on('set_player_team', ({ seat, team }, cb) => {
+    const r = room();
+    if (!r) return cb && cb({ ok: false, error: 'Sala não encontrada.' });
+    const host = r.playerBySocket(socket.id);
+    if (!host || host.seat !== 0) return cb && cb({ ok: false, error: 'Só o host pode escolher as duplas.' });
+    if (r.started) return cb && cb({ ok: false, error: 'A partida já começou.' });
+    if (r.mode !== '2v2') return cb && cb({ ok: false, error: 'Só é possível escolher duplas no modo 2v2.' });
+    if (team !== 0 && team !== 1) return cb && cb({ ok: false, error: 'Dupla inválida.' });
+    const target = r.playerBySeat(seat);
+    if (!target) return cb && cb({ ok: false, error: 'Jogador não encontrado.' });
+
+    target.team = team;
+    io.to(r.code).emit('lobby_update', r.lobbyState());
     cb && cb({ ok: true });
   });
 

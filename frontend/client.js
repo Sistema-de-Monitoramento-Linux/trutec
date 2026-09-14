@@ -427,17 +427,37 @@ socket.on('lobby_update', (lobby) => {
   currentRoomCodeForCopy = lobby.code;
   const wrap = document.getElementById('waiting-players');
   wrap.innerHTML = '';
+
+  // No 2v2, o host (assento 0) pode montar as duplas manualmente antes de
+  // iniciar. Os demais jogadores só veem em qual dupla cada um está.
+  const isHost = myWaitingSeat === 0;
+  const canEditTeams = isHost && lobby.mode === '2v2' && !lobby.started;
+
   for (let i = 0; i < lobby.maxPlayers; i++) {
     const p = lobby.players.find(pl => pl.seat === i);
     const row = document.createElement('div');
     row.className = 'wp-row';
     if (p) {
       const avatarSrc = p.character || 'assets/personagem.svg';
+
+      let teamHtml;
+      if (lobby.mode === '2v2' && canEditTeams) {
+        teamHtml = `
+          <div class="wp-team-toggle" role="group" aria-label="Escolher dupla de ${escapeHtml(p.name)}">
+            <button type="button" class="wp-team-btn team-a ${p.team === 0 ? 'active' : ''}" data-seat="${p.seat}" data-team="0">Dupla 1</button>
+            <button type="button" class="wp-team-btn team-b ${p.team === 1 ? 'active' : ''}" data-seat="${p.seat}" data-team="1">Dupla 2</button>
+          </div>`;
+      } else if (lobby.mode === '2v2') {
+        teamHtml = `<span class="wp-team wp-team-${p.team === 0 ? 'a' : 'b'}">Dupla ${p.team + 1}</span>`;
+      } else {
+        teamHtml = `<span class="wp-team">Time ${p.team + 1}</span>`;
+      }
+
       row.innerHTML = `
         <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
         <div class="wp-info">
           <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
-          <span class="wp-team">Time ${p.team + 1}</span>
+          ${teamHtml}
         </div>
       `;
     } else {
@@ -453,6 +473,21 @@ socket.on('lobby_update', (lobby) => {
     wrap.appendChild(row);
   }
 
+  if (canEditTeams) {
+    wrap.querySelectorAll('.wp-team-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const seat = parseInt(btn.dataset.seat, 10);
+        const team = parseInt(btn.dataset.team, 10);
+        socket.emit('set_player_team', { seat, team }, (res) => {
+          if (res && !res.ok) {
+            const el = document.getElementById('waiting-error');
+            if (el) el.textContent = res.error || 'Não foi possível mudar a dupla.';
+          }
+        });
+      });
+    });
+  }
+
   updateStartButton(lobby);
 });
 
@@ -466,18 +501,34 @@ function updateStartButton(lobby) {
 
   btn.classList.toggle('hidden', !isHost);
 
+  const full = lobby.players.length === lobby.maxPlayers;
+  const teamsReady = lobby.teamsReady !== false; // 1v1 sempre true
+
   if (isHost) {
     btn.disabled = !lobby.canStart;
-    btn.textContent = lobby.canStart
-      ? 'Iniciar partida'
-      : `Aguardando jogadores… (${lobby.players.length}/${lobby.maxPlayers})`;
-    hint.textContent = lobby.canStart
-      ? 'A mesa está completa — quando quiser, aperte em Iniciar partida.'
-      : 'Aguardando mais jogadores entrarem na sala…';
+    if (!full) {
+      btn.textContent = `Aguardando jogadores… (${lobby.players.length}/${lobby.maxPlayers})`;
+    } else if (!teamsReady) {
+      btn.textContent = 'Ajuste as duplas para iniciar';
+    } else {
+      btn.textContent = 'Iniciar partida';
+    }
+
+    if (!full) {
+      hint.textContent = 'Aguardando mais jogadores entrarem na sala…';
+    } else if (!teamsReady) {
+      hint.textContent = 'Toque em "Dupla 1" / "Dupla 2" pra montar os times (2 jogadores em cada).';
+    } else {
+      hint.textContent = 'A mesa está completa — quando quiser, aperte em Iniciar partida.';
+    }
   } else {
-    hint.textContent = lobby.canStart
-      ? 'A mesa está completa. Aguardando o host iniciar a partida…'
-      : 'Aguardando jogadores…';
+    if (!full) {
+      hint.textContent = 'Aguardando jogadores…';
+    } else if (!teamsReady) {
+      hint.textContent = 'O host está montando as duplas…';
+    } else {
+      hint.textContent = 'A mesa está completa. Aguardando o host iniciar a partida…';
+    }
   }
 }
 
