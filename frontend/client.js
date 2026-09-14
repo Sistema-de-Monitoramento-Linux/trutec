@@ -424,6 +424,24 @@ socket.on('lobby_update', (lobby) => {
 // ------------------------------------------------------------------
 // INÍCIO DE JOGO
 // ------------------------------------------------------------------
+let matchIntroPlayed = false;
+
+function playGameIntro() {
+  const overlay = document.getElementById('game-intro');
+  if (!overlay) return;
+  overlay.classList.remove('fade-out');
+  overlay.classList.add('active');
+
+  // dá tempo da bolinha crescer + a logo aparecer, segura um instante,
+  // e então esconde tudo revelando a mesa (que já está pronta por baixo)
+  setTimeout(() => {
+    overlay.classList.add('fade-out');
+    setTimeout(() => {
+      overlay.classList.remove('active', 'fade-out');
+    }, 550);
+  }, 2000);
+}
+
 socket.on('game_start', (state) => {
   mySeat = state.players.find(p => p.hand !== undefined).seat;
   myTeam = state.players.find(p => p.seat === mySeat).team;
@@ -433,6 +451,10 @@ socket.on('game_start', (state) => {
   setupSeatLabels(state);
   renderState(state);
   setBanner('');
+  if (!matchIntroPlayed) {
+    matchIntroPlayed = true;
+    playGameIntro();
+  }
 });
 
 function setupSeatLabels(state) {
