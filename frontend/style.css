@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'Coolvetica';
   /* Coolvetica não é uma fonte de sistema/Google Fonts — o arquivo
-     coolvetica.woff2 fica na raiz do projeto, junto dos outros arquivos. */
-  src: url('coolvetica.woff2') format('woff2');
+     coolvetica.woff2 fica dentro da pasta assets/, junto dos outros assets. */
+  src: url('assets/coolvetica.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
