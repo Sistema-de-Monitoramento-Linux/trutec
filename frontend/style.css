@@ -307,17 +307,17 @@ button { font-family: inherit; cursor: pointer; }
    como se você estivesse de frente pra eles do seu lado da mesa. */
 .opp-hand { display: flex; gap: -6px; transform-style: preserve-3d; }
 .opp-hand .card-back {
-  width: 40px; height: 56px;
-  margin-left: -19px;
-  border-radius: 5px;
+  width: 58px; height: 82px;
+  margin-left: -28px;
+  border-radius: 6px;
   background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
   border: 1px solid rgba(255,255,255,0.4);
   box-shadow: 0 8px 14px rgba(0,0,0,0.5);
-  transition: transform .2s ease;
+  transition: transform .25s ease, box-shadow .25s ease;
 }
 .opp-hand .card-back:first-child { margin-left: 0; }
 .opp-hand.vertical { flex-direction: column; }
-.opp-hand.vertical .card-back { margin-left: 0; margin-top: -27px; }
+.opp-hand.vertical .card-back { margin-left: 0; margin-top: -42px; }
 .opp-hand.vertical .card-back:first-child { margin-top: 0; }
 
 /* adversário à sua frente: cartas reclinadas pra trás, como olhando por cima da mesa */
@@ -334,6 +334,15 @@ button { font-family: inherit; cursor: pointer; }
 .seat-right .opp-hand .card-back {
   transform: rotateY(58deg) scale(0.94);
   transform-origin: 0% 50%;
+}
+
+/* Quando é a vez do oponente, as cartas "levantam" e ficam de pé,
+   de frente pro jogador, em vez de deitadas na mesa. */
+.seat-top .opp-hand.active-turn .card-back,
+.seat-left .opp-hand.active-turn .card-back,
+.seat-right .opp-hand.active-turn .card-back {
+  transform: rotateX(0deg) rotateY(0deg) scale(1.08);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.55), 0 0 0 2px rgba(240,205,124,0.6);
 }
 
 .center-area {
@@ -385,22 +394,39 @@ button { font-family: inherit; cursor: pointer; }
 .table-cards .played-card {
   position: absolute;
   width: 74px; height: 104px;
+  transition: transform .22s ease;
 }
-.played-pos-top    { top: 0; left: 41px; transform: rotate(-3deg); }
-.played-pos-left   { top: 56px; left: 0; transform: rotate(4deg); }
-.played-pos-right  { top: 56px; left: 82px; transform: rotate(-4deg); }
-.played-pos-bottom { top: 112px; left: 41px; transform: rotate(2deg); }
+.played-pos-top    { top: 0; left: 41px; }
+.played-pos-left   { top: 56px; left: 0; }
+.played-pos-right  { top: 56px; left: 82px; }
+.played-pos-bottom { top: 112px; left: 41px; }
 
-.banner {
-  min-height: 26px;
+/* Banner de mensagens (resultado de rodada, pontos, avisos): fica fora
+   do contexto 3D da mesa e centralizado na tela, sempre por cima das cartas. */
+.banner-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.94);
+  z-index: 18;
+  pointer-events: none;
   font-weight: 800;
   color: var(--gold-bright);
-  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 6px rgba(0,0,0,0.8);
   text-align: center;
-  font-size: 1rem;
-  background: rgba(0,0,0,0.3);
-  padding: 4px 14px;
-  border-radius: 10px;
+  font-size: 1.15rem;
+  background: rgba(6, 20, 12, 0.82);
+  padding: 14px 26px;
+  border-radius: 14px;
+  border: 1px solid rgba(216,178,94,0.45);
+  box-shadow: 0 20px 46px rgba(0,0,0,0.55);
+  max-width: min(440px, 86vw);
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.banner-toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 /* ---------------------------------------------------------------- */

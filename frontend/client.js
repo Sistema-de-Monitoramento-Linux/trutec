@@ -188,6 +188,7 @@ function renderState(state) {
       nameEl.classList.toggle('active-turn', state.turnSeat === p.seat);
     }
     if (handEl) {
+      handEl.classList.toggle('active-turn', state.turnSeat === p.seat);
       handEl.innerHTML = '';
       for (let i = 0; i < p.cardsLeft; i++) {
         const back = document.createElement('div');
@@ -200,13 +201,23 @@ function renderState(state) {
   document.getElementById('seat-left').style.visibility = n === 4 ? 'visible' : 'hidden';
   document.getElementById('seat-right').style.visibility = n === 4 ? 'visible' : 'hidden';
 
-  // mesa (cartas jogadas)
+  // mesa (cartas jogadas) — cartas de rodadas anteriores do mesmo jogador
+  // ficam sobrepostas (levemente deslocadas), em vez de somem por trás da nova.
   const tableWrap = document.getElementById('table-cards');
   tableWrap.innerHTML = '';
+  const BASE_ROT = { top: -3, left: 4, right: -4, bottom: 2 };
+  const stackCount = {};
   for (const play of state.table) {
     const pos = seatOffsetLabel(play.seat, n);
+    const idx = stackCount[pos] || 0;
+    stackCount[pos] = idx + 1;
     const holder = document.createElement('div');
     holder.className = `played-card played-pos-${pos}`;
+    const rot = (BASE_ROT[pos] || 0) + idx * 6;
+    const dx = idx * 8;
+    const dy = -idx * 8;
+    holder.style.transform = `rotate(${rot}deg) translate(${dx}px, ${dy}px)`;
+    holder.style.zIndex = String(idx + 1);
     if (play.hidden) {
       const back = document.createElement('div');
       back.className = 'card facedown';
@@ -346,7 +357,9 @@ document.getElementById('btn-aumentar-resp').addEventListener('click', () => {
 // Eventos de jogo (banners / resultados)
 // ------------------------------------------------------------------
 function setBanner(text) {
-  document.getElementById('banner').textContent = text || '';
+  const el = document.getElementById('banner');
+  el.textContent = text || '';
+  el.classList.toggle('show', !!text);
 }
 
 socket.on('call_announced', ({ byTeam, byName, level, value }) => {
