@@ -259,13 +259,9 @@ function buildCardEl(card, manilhaRank) {
 
 function onCardClick(card, isMyTurn) {
   if (!isMyTurn) return;
-  if (selectedCardId === card.id) {
-    // segundo clique confirma a jogada
-    playSelectedCard();
-  } else {
-    selectedCardId = card.id;
-    renderState(latestState);
-  }
+  // um clique já joga a carta
+  selectedCardId = card.id;
+  playSelectedCard();
 }
 
 function playSelectedCard() {
