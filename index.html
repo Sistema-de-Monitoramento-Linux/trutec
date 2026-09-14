@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Truco Paulista Online</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="screen-lobby" class="screen active">
+    <div class="lobby-card">
+      <h1 class="logo">Truco<span>Paulista</span></h1>
+      <p class="tagline">Baralho na mesa, prosa na roda.</p>
+
+      <div class="field">
+        <label for="input-name">Seu nome</label>
+        <input id="input-name" maxlength="16" placeholder="Ex: Zé da Manilha" />
+      </div>
+
+      <div class="mode-toggle">
+        <button class="mode-btn active" data-mode="1v1">1 vs 1</button>
+        <button class="mode-btn" data-mode="2v2">2 vs 2</button>
+      </div>
+
+      <div class="lobby-actions">
+        <button id="btn-quick" class="btn btn-primary">🎲 Jogar agora (sala pública)</button>
+
+        <div class="divider"><span>ou</span></div>
+
+        <button id="btn-create" class="btn btn-secondary">➕ Criar sala privada</button>
+
+        <div class="join-row">
+          <input id="input-code" maxlength="5" placeholder="CÓDIGO DA SALA" />
+          <button id="btn-join" class="btn btn-secondary">Entrar</button>
+        </div>
+      </div>
+
+      <p id="lobby-error" class="error-text"></p>
+    </div>
+  </div>
+
+  <!-- ===================== TELA: SALA DE ESPERA ===================== -->
+  <div id="screen-waiting" class="screen">
+    <div class="lobby-card">
+      <h2>Sala <span id="waiting-code" class="room-code"></span></h2>
+      <p class="tagline">Compartilhe o código com os amigos.</p>
+      <div id="waiting-players" class="waiting-players"></div>
+      <p class="waiting-hint">Aguardando jogadores… a partida começa automaticamente ao completar a mesa.</p>
+      <button id="btn-leave-waiting" class="btn btn-ghost">Voltar</button>
+    </div>
+  </div>
+
+  <!-- ===================== TELA: MESA DO JOGO ===================== -->
+  <div id="screen-game" class="screen">
+    <div class="table-wrap">
+
+      <!-- topo: placar -->
+      <div class="hud-top">
+        <div class="score-box">
+          <div class="score-team score-a"><span class="score-label" id="label-team-a">Nós</span><span class="score-value" id="score-a">0</span></div>
+          <div class="score-vs">x</div>
+          <div class="score-team score-b"><span class="score-label" id="label-team-b">Eles</span><span class="score-value" id="score-b">0</span></div>
+        </div>
+        <div class="stake-box">
+          <span id="stake-label">valendo 1</span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+
+        <!-- ações (coluna esquerda no desktop / barra embaixo no mobile) -->
+        <div class="actions-bar">
+          <button class="action-btn" id="btn-truco" data-level="truco">TRUCO</button>
+          <button class="action-btn" id="btn-seis" data-level="seis">SEIS</button>
+          <button class="action-btn" id="btn-nove" data-level="nove">NOVE</button>
+          <button class="action-btn" id="btn-doze" data-level="doze">DOZE</button>
+          <button class="action-btn danger" id="btn-correr">FUGIR</button>
+          <button class="action-btn" id="btn-esconder">🙈 ESCONDER</button>
+          <button class="action-btn icon" id="btn-toggle-chat">💬</button>
+        </div>
+
+        <!-- mesa + mão do jogador (centro) -->
+        <div class="felt-wrap">
+          <div class="felt">
+            <div id="seat-top" class="seat seat-top">
+              <div class="opp-hand" id="hand-top"></div>
+              <div class="seat-name" id="name-top">—</div>
+            </div>
+            <div id="seat-left" class="seat seat-left">
+              <div class="opp-hand vertical" id="hand-left"></div>
+              <div class="seat-name" id="name-left">—</div>
+            </div>
+            <div id="seat-right" class="seat seat-right">
+              <div class="opp-hand vertical" id="hand-right"></div>
+              <div class="seat-name" id="name-right">—</div>
+            </div>
+
+            <div class="center-area">
+              <div class="center-row">
+                <div class="vira-display">
+                  <div class="vira-label">Vira</div>
+                  <div id="vira-card" class="mini-card"></div>
+                </div>
+                <div id="table-cards" class="table-cards"></div>
+              </div>
+              <div id="banner" class="banner"></div>
+            </div>
+
+            <div id="seat-bottom" class="seat seat-bottom">
+              <div class="seat-name me" id="name-bottom">Você</div>
+            </div>
+          </div>
+
+          <!-- mão do jogador -->
+          <div class="my-hand" id="my-hand"></div>
+        </div>
+
+        <!-- chat (coluna direita no desktop / popup no mobile) -->
+        <div id="chat-panel" class="chat-panel hidden">
+          <div class="chat-messages" id="chat-messages"></div>
+          <div class="emoji-row">
+            <button class="emoji-btn">👍</button>
+            <button class="emoji-btn">😂</button>
+            <button class="emoji-btn">😮</button>
+            <button class="emoji-btn">😡</button>
+            <button class="emoji-btn">🔥</button>
+            <button class="emoji-btn">🤫</button>
+          </div>
+          <div class="chat-input-row">
+            <input id="chat-input" maxlength="120" placeholder="Manda a mensagem…" />
+            <button id="btn-send-chat">Enviar</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- pedido de truco pendente -->
+      <div id="call-overlay" class="call-overlay hidden">
+        <div class="call-box">
+          <p id="call-text">—</p>
+          <div class="call-buttons">
+            <button id="btn-aceitar" class="btn btn-primary">Aceitar</button>
+            <button id="btn-fugir" class="btn btn-danger">Fugir</button>
+            <button id="btn-aumentar-resp" class="btn btn-secondary">Aumentar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== TELA: FIM DE JOGO ===================== -->
+  <div id="screen-gameover" class="screen">
+    <div class="lobby-card">
+      <h2 id="gameover-title">Fim de jogo</h2>
+      <p id="gameover-sub" class="tagline"></p>
+      <button id="btn-play-again" class="btn btn-primary">Jogar de novo</button>
+    </div>
+  </div>
+
+  <!-- toasts de emoji flutuante -->
+  <div id="emoji-layer"></div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="config.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
