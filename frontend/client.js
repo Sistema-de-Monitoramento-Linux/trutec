@@ -440,26 +440,39 @@ socket.on('lobby_update', (lobby) => {
     if (p) {
       const avatarSrc = p.character || 'assets/personagem.svg';
 
-      let teamHtml;
       if (lobby.mode === '2v2' && canEditTeams) {
-        teamHtml = `
+        // Host editando: nome à esquerda, botões grandes de dupla ocupando
+        // o espaço vazio à direita da linha (como um item de flex à parte,
+        // não dentro do bloco de nome — assim não estoura a largura do card).
+        row.classList.add('wp-row-edit');
+        row.innerHTML = `
+          <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
+          <div class="wp-info">
+            <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
+          </div>
           <div class="wp-team-toggle" role="group" aria-label="Escolher dupla de ${escapeHtml(p.name)}">
             <button type="button" class="wp-team-btn team-a ${p.team === 0 ? 'active' : ''}" data-seat="${p.seat}" data-team="0">Dupla 1</button>
             <button type="button" class="wp-team-btn team-b ${p.team === 1 ? 'active' : ''}" data-seat="${p.seat}" data-team="1">Dupla 2</button>
-          </div>`;
+          </div>
+        `;
       } else if (lobby.mode === '2v2') {
-        teamHtml = `<span class="wp-team wp-team-${p.team === 0 ? 'a' : 'b'}">Dupla ${p.team + 1}</span>`;
+        const teamHtml = `<span class="wp-team wp-team-${p.team === 0 ? 'a' : 'b'}">Dupla ${p.team + 1}</span>`;
+        row.innerHTML = `
+          <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
+          <div class="wp-info">
+            <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
+            ${teamHtml}
+          </div>
+        `;
       } else {
-        teamHtml = `<span class="wp-team">Time ${p.team + 1}</span>`;
+        row.innerHTML = `
+          <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
+          <div class="wp-info">
+            <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
+            <span class="wp-team">Time ${p.team + 1}</span>
+          </div>
+        `;
       }
-
-      row.innerHTML = `
-        <div class="wp-avatar"><img src="${avatarSrc}" alt="" draggable="false" /></div>
-        <div class="wp-info">
-          <span class="wp-name">${escapeHtml(p.name)}${p.connected ? '' : ' (saiu)'}${p.seat === 0 ? ' 👑' : ''}</span>
-          ${teamHtml}
-        </div>
-      `;
     } else {
       row.className += ' wp-row-empty';
       row.innerHTML = `
