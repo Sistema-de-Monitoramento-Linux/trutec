@@ -34,23 +34,9 @@ html, body {
   margin: 0;
   height: 100%;
   background-color: #ccc9dc;
-  background-image: repeating-linear-gradient(
-    120deg,
-    rgba(0, 0, 0, 0.07) 0px,
-    rgba(0, 0, 0, 0.07) 7px,
-    transparent 7px,
-    transparent 64px
-  );
-  background-size: 300% 300%;
-  animation: moveStripes 100s linear infinite;
   color: var(--cream);
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
-}
-
-@keyframes moveStripes {
-  0%   { background-position: 0% 0%; }
-  100% { background-position: 100% 0%; }
 }
 
 button { font-family: inherit; cursor: pointer; }
@@ -140,7 +126,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .lobby-card {
-  background: linear-gradient(180deg, #0c1821, #000000);
+  background: var(--panel);
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
   padding: 14px 24px;
@@ -160,7 +146,7 @@ button { font-family: inherit; cursor: pointer; }
 /* Card (lobby): preview grande do personagem + botão "editar"         */
 /* ---------------------------------------------------------------- */
 .character-preview-card {
-  background: linear-gradient(180deg, #0c1821, #000000);
+  background: var(--panel);
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
   padding: 18px 22px 22px;
@@ -193,7 +179,7 @@ button { font-family: inherit; cursor: pointer; }
 /* Tela: editar personagem (canvas + ferramentas de desenho)          */
 /* ---------------------------------------------------------------- */
 .character-panel {
-  background: linear-gradient(180deg, #0c1821, #000000);
+  background: var(--panel);
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
   padding: 16px 20px 18px;
@@ -355,18 +341,18 @@ button { font-family: inherit; cursor: pointer; }
 }
 .btn:active { transform: translateY(1px) scale(0.98); }
 .btn-primary {
-  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  background: var(--gold);
   color: #000000;
   box-shadow: 0 3px 0 var(--gold-dim), 0 8px 16px rgba(0,0,0,0.35);
 }
 .btn-secondary {
-  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  background: rgba(255,255,255,0.08);
   color: var(--cream);
   border: 1px solid rgba(255,255,255,0.2);
   box-shadow: 0 3px 0 rgba(0,0,0,0.3);
 }
 .btn-ghost { background: transparent; color: #ccc9dc; margin-top: 16px; text-decoration: underline; }
-.btn-danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #000000; }
+.btn-danger { background: var(--danger); color: white; box-shadow: 0 3px 0 #000000; }
 .btn:hover { filter: brightness(1.08); }
 
 .divider { display: flex; align-items: center; color: #324a5f; font-size: 0.9rem; margin: 2px 0; }
@@ -422,7 +408,7 @@ button { font-family: inherit; cursor: pointer; }
   align-items: center;
   justify-content: space-between;
   padding: 10px 18px 10px 82px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.3));
+  background: rgba(0,0,0,0.45);
   border-bottom: 1px solid rgba(255,255,255,0.25);
   z-index: 5;
 }
@@ -437,7 +423,7 @@ button { font-family: inherit; cursor: pointer; }
 .score-vs { color: #324a5f; font-size: 0.8rem; }
 
 .stake-box {
-  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  background: var(--gold);
   color: #000000;
   padding: 7px 16px;
   border-radius: 20px;
@@ -466,7 +452,7 @@ button { font-family: inherit; cursor: pointer; }
   top: 0; left: 0;
   width: 58px; height: 82px;
   border-radius: 8px;
-  background: repeating-linear-gradient(45deg, #0c1821, #0c1821 4px, #000000 4px, #000000 8px);
+  background: #0c1821;
   border: 1px solid rgba(255,255,255,0.3);
   box-shadow: 0 3px 8px rgba(0,0,0,0.4);
 }
@@ -478,7 +464,7 @@ button { font-family: inherit; cursor: pointer; }
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 800;
-  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  background: var(--gold);
   padding: 2px 10px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.4);
@@ -486,7 +472,7 @@ button { font-family: inherit; cursor: pointer; }
 .mini-card {
   position: relative;
   width: 58px; height: 82px;
-  background: linear-gradient(150deg, #ccc9dc 0%, #ccc9dc 60%, #ccc9dc 100%);
+  background: #ccc9dc;
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
   font-weight: 800; font-size: 1.2rem;
@@ -500,7 +486,7 @@ button { font-family: inherit; cursor: pointer; }
   flex: 1;
   position: relative;
   background:
-    radial-gradient(ellipse at center, var(--felt-light) 0%, var(--felt) 55%, var(--felt-dark) 100%);
+    var(--felt);
   border-top: 6px solid var(--wood);
   box-shadow:
     inset 0 0 90px rgba(0,0,0,0.55),
@@ -521,7 +507,7 @@ button { font-family: inherit; cursor: pointer; }
   /* vinheta pra dar profundidade à mesa */
   content: "";
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.45) 100%);
+  background: none;
   pointer-events: none;
 }
 
@@ -559,7 +545,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 58px; height: 82px;
   margin-left: -28px;
   border-radius: 6px;
-  background: repeating-linear-gradient(45deg, #0c1821, #0c1821 4px, #000000 4px, #000000 8px);
+  background: #0c1821;
   border: 1px solid rgba(255,255,255,0.4);
   box-shadow: 0 8px 14px rgba(0,0,0,0.5);
   transition: transform .5s cubic-bezier(.34, 1.56, .64, 1), box-shadow .4s ease;
@@ -626,7 +612,7 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   inset: -22px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 38% 30%, var(--felt-light) 0%, var(--felt) 55%, var(--felt-dark) 100%);
+  background: var(--felt);
   border: 2px solid rgba(255,255,255,0.45);
   box-shadow:
     0 32px 60px rgba(0,0,0,0.65),
@@ -687,7 +673,7 @@ button { font-family: inherit; cursor: pointer; }
 .card {
   position: relative;
   width: 74px; height: 104px;
-  background: linear-gradient(150deg, #ccc9dc 0%, #ccc9dc 55%, #ccc9dc 100%);
+  background: #ccc9dc;
   border-radius: 9px;
   display: flex;
   flex-direction: column;
@@ -715,7 +701,7 @@ button { font-family: inherit; cursor: pointer; }
     0 8px 18px rgba(255,255,255,0.35);
 }
 .card.facedown {
-  background: repeating-linear-gradient(45deg, #0c1821, #0c1821 4px, #000000 4px, #000000 8px);
+  background: #0c1821;
 }
 
 /* índices de canto, tipo carta de baralho de verdade */
@@ -798,7 +784,7 @@ button { font-family: inherit; cursor: pointer; }
   gap: 6px;
   padding: 8px 10px 12px;
   overflow-x: auto;
-  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45));
+  background: rgba(0,0,0,0.35);
   border-top: 1px solid rgba(255,255,255,0.2);
 }
 .action-btn {
@@ -806,7 +792,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: 11px 14px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  background: var(--gold);
   color: #000000;
   font-weight: 800;
   font-size: 0.8rem;
@@ -816,8 +802,8 @@ button { font-family: inherit; cursor: pointer; }
   transition: opacity .15s, transform .1s, box-shadow .1s;
 }
 .action-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--gold-dim), 0 2px 4px rgba(0,0,0,0.3); }
-.action-btn.danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); color: white; box-shadow: 0 3px 0 #000000, 0 5px 10px rgba(0,0,0,0.35); }
-.action-btn.icon { background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)); color: var(--cream); box-shadow: 0 3px 0 rgba(0,0,0,0.3); }
+.action-btn.danger { background: var(--danger); color: white; box-shadow: 0 3px 0 #000000, 0 5px 10px rgba(0,0,0,0.35); }
+.action-btn.icon { background: rgba(255,255,255,0.12); color: var(--cream); box-shadow: 0 3px 0 rgba(0,0,0,0.3); }
 .action-btn:disabled { opacity: 0.35; pointer-events: none; box-shadow: none; transform: none; }
 .action-btn.esconder-active { outline: 2px solid var(--gold-bright); box-shadow: 0 0 12px rgba(255,255,255,0.7); }
 
@@ -827,7 +813,7 @@ button { font-family: inherit; cursor: pointer; }
   top: 12px;
   left: 12px;
   z-index: 12;
-  background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05));
+  background: rgba(255,255,255,0.1);
   color: var(--cream);
   border: 1px solid rgba(255,255,255,0.25);
   border-radius: 10px;
@@ -850,7 +836,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .call-overlay.hidden { display: none; }
 .call-box {
-  background: linear-gradient(180deg, #0c1821, var(--panel));
+  background: var(--panel);
   border: 1px solid var(--gold);
   border-radius: 16px;
   padding: 24px;
@@ -870,7 +856,7 @@ button { font-family: inherit; cursor: pointer; }
   right: 10px; bottom: 90px;
   width: min(280px, calc(100vw - 20px));
   height: 320px;
-  background: linear-gradient(180deg, rgba(20,20,20,0.97), rgba(10,10,10,0.97));
+  background: rgba(12,24,33,0.97);
   border: 1px solid rgba(255,255,255,0.4);
   border-radius: 14px;
   display: flex;
@@ -908,7 +894,7 @@ button { font-family: inherit; cursor: pointer; }
 .chat-input-row input::placeholder { color: rgba(240,240,240,0.45); }
 .chat-input-row button {
   flex-shrink: 0;
-  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  background: var(--gold);
   border: none; padding: 0 14px; font-weight: 700; color: #000000;
 }
 
