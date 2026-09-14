@@ -75,27 +75,60 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 #screen-lobby.screen {
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding-top: 4vh;
+  padding-top: 0;
 }
 
+/* Container ocupa a tela inteira: o card de personagem fica cravado
+   bem no centro, e o hud do TruTEC (logo + login) fica preso na
+   extrema direita, ambos centralizados verticalmente. */
 .lobby-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 36px;
-  flex-wrap: wrap;
+  position: relative;
   width: 100%;
+  height: 100%;
+  min-height: 86vh;
+}
+
+.character-preview-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .lobby-stack {
+  position: absolute;
+  top: 50%;
+  right: clamp(12px, 3vw, 48px);
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  width: min(560px, 94vw);
+  width: min(420px, 34vw);
   max-height: 100%;
+}
+
+/* Em telas estreitas não dá pra encaixar os dois hud lado a lado
+   fixados nas pontas — volta pro empilhamento simples e centralizado. */
+@media (max-width: 900px) {
+  .lobby-row {
+    position: static;
+    height: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 4vh 0;
+  }
+  .character-preview-card,
+  .lobby-stack {
+    position: static;
+    transform: none;
+    width: min(420px, 94vw);
+  }
 }
 
 .site-logo-top {
@@ -150,6 +183,7 @@ button { font-family: inherit; cursor: pointer; }
   height: 100%;
   object-fit: contain;
   display: block;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.28));
 }
 
 .character-edit-btn { width: 100%; }
@@ -187,7 +221,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 100%;
   height: 100%;
 }
-#character-base { pointer-events: none; user-select: none; }
+#character-base { pointer-events: none; user-select: none; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.28)); }
 #character-canvas { cursor: crosshair; touch-action: none; }
 
 .character-toolbar { display: flex; flex-direction: column; align-items: center; gap: 8px; }
