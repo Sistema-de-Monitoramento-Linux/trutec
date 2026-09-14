@@ -80,7 +80,7 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   width: min(560px, 94vw);
   max-height: 100%;
   justify-content: center;
@@ -88,7 +88,7 @@ button { font-family: inherit; cursor: pointer; }
 
 .site-logo-top {
   display: block;
-  width: min(320px, 56vw);
+  width: min(430px, 72vw);
   flex-shrink: 0;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,0.18));
 }
@@ -97,7 +97,7 @@ button { font-family: inherit; cursor: pointer; }
   background: linear-gradient(180deg, #1a1a1a, #050505);
   border: 1px solid rgba(255,255,255,0.35);
   border-radius: 20px;
-  padding: 20px 26px;
+  padding: 14px 24px;
   width: min(480px, 92vw);
   text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
@@ -117,7 +117,7 @@ button { font-family: inherit; cursor: pointer; }
   100% { transform: translateY(0); }
 }
 
-.field { text-align: left; margin-bottom: 12px; }
+.field { text-align: left; margin-bottom: 8px; }
 .field label { display: block; font-size: 0.95rem; color: #b5b5b5; margin-bottom: 5px; }
 .field input, .join-row input {
   width: 100%;
@@ -134,7 +134,7 @@ button { font-family: inherit; cursor: pointer; }
   background: rgba(0,0,0,0.25);
   border-radius: 10px;
   padding: 4px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .mode-btn {
   flex: 1;
@@ -149,7 +149,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .mode-btn.active { background: var(--gold); color: #0a0a0a; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
 
-.lobby-actions { display: flex; flex-direction: column; gap: 9px; }
+.lobby-actions { display: flex; flex-direction: column; gap: 7px; }
 
 .btn {
   padding: 13px 18px;
