@@ -76,6 +76,12 @@ button { font-family: inherit; cursor: pointer; }
   box-sizing: border-box;
 }
 
+#screen-lobby.screen {
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 4vh;
+}
+
 .lobby-stack {
   display: flex;
   flex-direction: column;
@@ -83,12 +89,11 @@ button { font-family: inherit; cursor: pointer; }
   gap: 4px;
   width: min(560px, 94vw);
   max-height: 100%;
-  justify-content: center;
 }
 
 .site-logo-top {
   display: block;
-  width: min(430px, 72vw);
+  width: min(480px, 80vw);
   flex-shrink: 0;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,0.18));
 }
