@@ -295,6 +295,76 @@ button { font-family: inherit; cursor: pointer; }
 .character-save-btn { width: 100%; margin-top: 2px; font-size: 1.05rem; padding: 16px 18px; }
 .character-save-msg { min-height: 14px; margin: 4px 0 0; font-size: 0.8rem; color: #7ee787; }
 
+/* Abas do editor: Desenho / Pele */
+.editor-tabs { display: flex; gap: 8px; }
+.editor-tab-btn {
+  flex: 1;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  color: var(--cream);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+.editor-tab-btn:hover { background: rgba(255,255,255,0.14); }
+.editor-tab-btn.active { background: var(--gold); color: #040303; border-color: var(--gold); }
+
+.editor-tab-panel { display: none; flex-direction: column; gap: 16px; }
+.editor-tab-panel.active { display: flex; }
+
+/* Aba "Pele": slider de matiz + bolinhas de tons pré-definidos */
+.skin-hint { margin: 0; }
+.skin-hue-slider {
+  width: 100%;
+  height: 20px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.skin-hue-slider::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(to right,
+    #ff0042, #ff8a00, #ffe600, #4dff4d, #00e0ff, #3b6bff, #b83bff, #ff3bd4, #ff0042);
+}
+.skin-hue-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid rgba(0,0,0,0.35);
+  cursor: pointer;
+}
+.skin-hue-slider::-moz-range-track {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(to right,
+    #ff0042, #ff8a00, #ffe600, #4dff4d, #00e0ff, #3b6bff, #b83bff, #ff3bd4, #ff0042);
+}
+.skin-hue-slider::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid rgba(0,0,0,0.35);
+  cursor: pointer;
+}
+.skin-presets { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.skin-preset {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  padding: 0;
+  cursor: pointer;
+  transition: transform .1s, border-color .15s;
+}
+.skin-preset:hover { transform: scale(1.12); }
+.skin-preset.active { border-color: var(--gold-bright); box-shadow: 0 0 0 3px rgba(255,255,255,0.3); }
+
 /* Telas menores: empilha (ferramentas em cima, boneco embaixo) e reduz tamanhos */
 @media (max-width: 900px) {
   .character-panel-wide { padding: 18px 16px 22px; }

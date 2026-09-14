@@ -118,12 +118,76 @@ function getSavedCharacter() {
   const btnClear = document.getElementById('btn-character-clear');
   const btnSave = document.getElementById('btn-character-save');
   const saveMsg = document.getElementById('character-save-msg');
+  const characterBase = document.getElementById('character-base');
 
   let drawing = false;
   let currentColor = colorPicker.value;
   let currentTool = 'pen'; // 'pen' | 'eraser'
   let lastX = 0, lastY = 0;
   const undoStack = [];
+
+  // ------------------------------------------------------------------
+  // Aba "Pele": tom/cor do boneco via hue-rotate (o boneco é um SVG de
+  // cor sólida, então rotacionar o matiz é suficiente pra trocar o tom).
+  // ------------------------------------------------------------------
+  const CHARACTER_BASE_COLOR = '#ff0042'; // cor original do svg do personagem
+  const skinHueSlider = document.getElementById('character-skin-hue');
+  const skinPresetsWrap = document.getElementById('skin-presets');
+  const tabButtons = document.querySelectorAll('.editor-tab-btn');
+  const tabPanels = document.querySelectorAll('.editor-tab-panel');
+  let skinHue = 0;
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.querySelector(`.editor-tab-panel[data-tab-panel="${btn.dataset.tab}"]`);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // Usa um canvas de 1x1 pra descobrir a cor real que o navegador produz
+  // ao aplicar hue-rotate — assim as bolinhas de tom batem exatamente
+  // com o resultado que vai aparecer no boneco.
+  function hueRotatedColor(deg) {
+    const c = document.createElement('canvas');
+    c.width = 1; c.height = 1;
+    const cx = c.getContext('2d');
+    cx.filter = `hue-rotate(${deg}deg)`;
+    cx.fillStyle = CHARACTER_BASE_COLOR;
+    cx.fillRect(0, 0, 1, 1);
+    const d = cx.getImageData(0, 0, 1, 1).data;
+    return `rgb(${d[0]}, ${d[1]}, ${d[2]})`;
+  }
+
+  function setSkinHue(deg) {
+    skinHue = deg;
+    skinHueSlider.value = deg;
+    characterBase.style.filter = deg ? `hue-rotate(${deg}deg)` : 'none';
+    skinPresetsWrap.querySelectorAll('.skin-preset').forEach(b => {
+      b.classList.toggle('active', Number(b.dataset.hue) === deg);
+    });
+  }
+
+  const SKIN_PRESET_DEGS = [0, 25, 55, 100, 150, 190, 230, 270, 310];
+  SKIN_PRESET_DEGS.forEach(deg => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'skin-preset' + (deg === 0 ? ' active' : '');
+    b.dataset.hue = String(deg);
+    b.style.background = hueRotatedColor(deg);
+    b.title = deg === 0 ? 'Tom original' : `Tom ${deg}°`;
+    b.addEventListener('click', () => setSkinHue(deg));
+    skinPresetsWrap.appendChild(b);
+  });
+
+  skinHueSlider.addEventListener('input', () => setSkinHue(Number(skinHueSlider.value)));
+
+  try {
+    const savedHue = localStorage.getItem('trutec_personagem_hue');
+    if (savedHue !== null) setSkinHue(Number(savedHue));
+  } catch (e) { /* localStorage indisponível, ignora */ }
 
   function pushUndoState() {
     undoStack.push(canvas.toDataURL());
@@ -231,18 +295,21 @@ function getSavedCharacter() {
   });
 
   btnSave.addEventListener('click', () => {
-    // Junta o boneco base + o desenho num único PNG.
+    // Junta o boneco base (com o tom escolhido na aba "Pele") + o desenho num único PNG.
     const merged = document.createElement('canvas');
     merged.width = canvas.width;
     merged.height = canvas.height;
     const mctx = merged.getContext('2d');
     const baseImg = document.getElementById('character-base');
+    mctx.filter = skinHue ? `hue-rotate(${skinHue}deg)` : 'none';
     mctx.drawImage(baseImg, 0, 0, merged.width, merged.height);
+    mctx.filter = 'none';
     mctx.drawImage(canvas, 0, 0);
     const dataUrl = merged.toDataURL('image/png');
 
     try {
       localStorage.setItem('trutec_meu_personagem', dataUrl);
+      localStorage.setItem('trutec_personagem_hue', String(skinHue));
     } catch (e) {
       console.warn('Não foi possível salvar no localStorage:', e);
     }

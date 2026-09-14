@@ -132,26 +132,39 @@
       <div class="character-editor-layout">
 
         <div class="character-toolbar">
-          <div class="color-swatches">
-            <button type="button" class="color-swatch active" data-color="#0a0a0a" style="background:#0a0a0a"></button>
-            <button type="button" class="color-swatch" data-color="#ffffff" style="background:#ffffff"></button>
-            <button type="button" class="color-swatch" data-color="#ff2e63" style="background:#ff2e63"></button>
-            <button type="button" class="color-swatch" data-color="#ffd23f" style="background:#ffd23f"></button>
-            <button type="button" class="color-swatch" data-color="#2e86ff" style="background:#2e86ff"></button>
-            <button type="button" class="color-swatch" data-color="#2ecc71" style="background:#2ecc71"></button>
-            <input type="color" id="character-color-picker" value="#0a0a0a" title="Cor personalizada" />
+          <div class="editor-tabs">
+            <button type="button" class="editor-tab-btn active" data-tab="desenho">🖌️ Desenho</button>
+            <button type="button" class="editor-tab-btn" data-tab="pele">🎨 Pele</button>
           </div>
 
-          <div class="brush-row">
-            <label for="character-brush-size">Pincel</label>
-            <input type="range" id="character-brush-size" min="2" max="36" value="8" />
+          <div class="editor-tab-panel active" data-tab-panel="desenho">
+            <div class="color-swatches">
+              <button type="button" class="color-swatch active" data-color="#0a0a0a" style="background:#0a0a0a"></button>
+              <button type="button" class="color-swatch" data-color="#ffffff" style="background:#ffffff"></button>
+              <button type="button" class="color-swatch" data-color="#ff2e63" style="background:#ff2e63"></button>
+              <button type="button" class="color-swatch" data-color="#ffd23f" style="background:#ffd23f"></button>
+              <button type="button" class="color-swatch" data-color="#2e86ff" style="background:#2e86ff"></button>
+              <button type="button" class="color-swatch" data-color="#2ecc71" style="background:#2ecc71"></button>
+              <input type="color" id="character-color-picker" value="#0a0a0a" title="Cor personalizada" />
+            </div>
+
+            <div class="brush-row">
+              <label for="character-brush-size">Pincel</label>
+              <input type="range" id="character-brush-size" min="2" max="36" value="8" />
+            </div>
+
+            <div class="tool-buttons">
+              <button type="button" id="btn-tool-pen" class="tool-btn active">✏️ Caneta</button>
+              <button type="button" id="btn-tool-eraser" class="tool-btn">🧽 Borracha</button>
+              <button type="button" id="btn-character-undo" class="tool-btn">↩️ Desfazer</button>
+              <button type="button" id="btn-character-clear" class="tool-btn">🗑️ Limpar</button>
+            </div>
           </div>
 
-          <div class="tool-buttons">
-            <button type="button" id="btn-tool-pen" class="tool-btn active">✏️ Caneta</button>
-            <button type="button" id="btn-tool-eraser" class="tool-btn">🧽 Borracha</button>
-            <button type="button" id="btn-character-undo" class="tool-btn">↩️ Desfazer</button>
-            <button type="button" id="btn-character-clear" class="tool-btn">🗑️ Limpar</button>
+          <div class="editor-tab-panel" data-tab-panel="pele">
+            <p class="character-hint skin-hint">Escolha o tom do boneco.</p>
+            <input type="range" id="character-skin-hue" class="skin-hue-slider" min="0" max="360" value="0" />
+            <div class="skin-presets" id="skin-presets"></div>
           </div>
 
           <button type="button" id="btn-character-save" class="btn btn-primary character-save-btn">💾 Salvar personagem</button>
