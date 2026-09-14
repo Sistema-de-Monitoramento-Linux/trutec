@@ -284,9 +284,9 @@ button { font-family: inherit; cursor: pointer; }
   gap: 4px;
   z-index: 3;
 }
-.seat-top { top: 8px; left: 50%; transform: translateX(-50%); }
-.seat-left { top: 50%; left: 8px; transform: translateY(-50%); }
-.seat-right { top: 50%; right: 8px; transform: translateY(-50%); }
+.seat-top { top: 8px; left: 50%; transform: translateX(-50%); perspective: 700px; }
+.seat-left { top: 50%; left: 8px; transform: translateY(-50%); perspective: 700px; }
+.seat-right { top: 50%; right: 8px; transform: translateY(-50%); perspective: 700px; }
 .seat-bottom { bottom: 6px; left: 50%; transform: translateX(-50%); z-index: 3; }
 
 .seat-name {
@@ -303,19 +303,38 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: 0 0 12px rgba(240,205,124,0.6);
 }
 
-.opp-hand { display: flex; gap: -6px; }
+/* Mãos dos oponentes em 3D real — cada lado inclinado no eixo certo,
+   como se você estivesse de frente pra eles do seu lado da mesa. */
+.opp-hand { display: flex; gap: -6px; transform-style: preserve-3d; }
 .opp-hand .card-back {
-  width: 38px; height: 53px;
-  margin-left: -17px;
+  width: 40px; height: 56px;
+  margin-left: -19px;
   border-radius: 5px;
   background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5c1616 4px, #5c1616 8px);
   border: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 14px rgba(0,0,0,0.5);
+  transition: transform .2s ease;
 }
 .opp-hand .card-back:first-child { margin-left: 0; }
 .opp-hand.vertical { flex-direction: column; }
-.opp-hand.vertical .card-back { margin-left: 0; margin-top: -25px; }
+.opp-hand.vertical .card-back { margin-left: 0; margin-top: -27px; }
 .opp-hand.vertical .card-back:first-child { margin-top: 0; }
+
+/* adversário à sua frente: cartas reclinadas pra trás, como olhando por cima da mesa */
+.seat-top .opp-hand .card-back {
+  transform: rotateX(58deg) scale(0.94);
+  transform-origin: 50% 100%;
+}
+/* parceiro/adversário à esquerda: reclinado lateralmente, recuando pra longe de você */
+.seat-left .opp-hand .card-back {
+  transform: rotateY(-58deg) scale(0.94);
+  transform-origin: 100% 50%;
+}
+/* parceiro/adversário à direita: espelhado */
+.seat-right .opp-hand .card-back {
+  transform: rotateY(58deg) scale(0.94);
+  transform-origin: 0% 50%;
+}
 
 .center-area {
   position: absolute;
@@ -326,6 +345,32 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: center;
   gap: 18px;
   z-index: 2;
+  perspective: 1500px;
+}
+
+/* "Mesa" 3D de verdade: um disco de feltro inclinado no eixo X onde
+   as cartas jogadas ficam deitadas, como uma superfície vista em perspectiva. */
+.table-disc {
+  position: relative;
+  width: 236px;
+  height: 236px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotateX(50deg);
+  transform-style: preserve-3d;
+}
+.table-disc::before {
+  content: "";
+  position: absolute;
+  inset: -22px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 38% 30%, var(--felt-light) 0%, var(--felt) 55%, var(--felt-dark) 100%);
+  border: 2px solid rgba(216,178,94,0.45);
+  box-shadow:
+    0 32px 60px rgba(0,0,0,0.65),
+    inset 0 3px 0 rgba(255,255,255,0.18),
+    inset 0 0 40px rgba(0,0,0,0.4);
 }
 .table-cards {
   display: grid;
@@ -335,6 +380,7 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
   width: 156px;
   height: 216px;
+  transform-style: preserve-3d;
 }
 .table-cards .played-card {
   position: absolute;
