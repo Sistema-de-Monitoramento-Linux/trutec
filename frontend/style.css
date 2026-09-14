@@ -32,6 +32,25 @@
 
 * { box-sizing: border-box; }
 
+/* --------------------------------------------------------------------
+   Bloqueia seleção de texto no site inteiro (o jogo não é um site de
+   texto, então selecionar nomes/cartas/etc só atrapalha). Inputs e
+   textareas ficam de fora da regra pra continuar editáveis normalmente.
+   -------------------------------------------------------------------- */
+html, body, * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none; /* evita o menu de "copiar/compartilhar" no long-press do iOS */
+}
+input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
 html, body {
   margin: 0;
   height: 100%;

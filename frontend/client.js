@@ -38,6 +38,33 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// --------------------------------------------------------------------------
+// Trava menu de botão direito e atalhos comuns de DevTools/ver código-fonte.
+// Aviso: isso é só um dificultador de superfície — dá pra abrir o DevTools
+// pelo menu do navegador mesmo assim, não existe bloqueio real client-side.
+// --------------------------------------------------------------------------
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+document.addEventListener('keydown', (e) => {
+  const key = e.key;
+  const blocked =
+    key === 'F12' ||
+    ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(key)) || // DevTools / inspecionar
+    ((e.ctrlKey || e.metaKey) && ['U', 'u'].includes(key)); // ver código-fonte
+  if (blocked) e.preventDefault();
+});
+
+// Fallback pra navegadores/dispositivos onde o CSS user-select não pega
+// (ex: alguns fluxos de seleção via toque)
+document.addEventListener('selectstart', (e) => {
+  const tag = e.target && e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return; // deixa os campos de texto funcionarem
+  e.preventDefault();
+});
+
+// Impede arrastar imagens (evita "salvar imagem como" via drag)
+document.addEventListener('dragstart', (e) => e.preventDefault());
+
 const socket = io(RESOLVED_BACKEND_URL, {
   transports: ['websocket', 'polling']
 });
