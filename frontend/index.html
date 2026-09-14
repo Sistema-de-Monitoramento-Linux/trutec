@@ -9,6 +9,7 @@
 <body>
 
   <div id="screen-lobby" class="screen active">
+    <div class="lobby-row">
     <div class="lobby-stack">
       <svg class="site-logo-top" viewBox="0 0 1400 519" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TruTEC">
       <g transform="translate(0.000000,519.000000) scale(0.100000,-0.100000)">
@@ -105,6 +106,45 @@
       </div>
 
       <p id="lobby-error" class="error-text"></p>
+    </div>
+    </div>
+
+    <!-- ===================== PAINEL: CRIAR PERSONAGEM ===================== -->
+    <div class="character-panel">
+      <h3 class="character-title">Crie seu personagem</h3>
+      <p class="character-hint">Desenhe em cima do boneco pra deixar do seu jeito.</p>
+
+      <div class="character-canvas-wrap">
+        <img id="character-base" src="assets/personagem.png" alt="Personagem" draggable="false" />
+        <canvas id="character-canvas" width="500" height="500"></canvas>
+      </div>
+
+      <div class="character-toolbar">
+        <div class="color-swatches">
+          <button type="button" class="color-swatch active" data-color="#0a0a0a" style="background:#0a0a0a"></button>
+          <button type="button" class="color-swatch" data-color="#ffffff" style="background:#ffffff"></button>
+          <button type="button" class="color-swatch" data-color="#ff2e63" style="background:#ff2e63"></button>
+          <button type="button" class="color-swatch" data-color="#ffd23f" style="background:#ffd23f"></button>
+          <button type="button" class="color-swatch" data-color="#2e86ff" style="background:#2e86ff"></button>
+          <button type="button" class="color-swatch" data-color="#2ecc71" style="background:#2ecc71"></button>
+          <input type="color" id="character-color-picker" value="#0a0a0a" title="Cor personalizada" />
+        </div>
+
+        <div class="brush-row">
+          <label for="character-brush-size">Pincel</label>
+          <input type="range" id="character-brush-size" min="2" max="36" value="8" />
+        </div>
+
+        <div class="tool-buttons">
+          <button type="button" id="btn-tool-pen" class="tool-btn active">✏️ Caneta</button>
+          <button type="button" id="btn-tool-eraser" class="tool-btn">🧽 Borracha</button>
+          <button type="button" id="btn-character-undo" class="tool-btn">↩️ Desfazer</button>
+          <button type="button" id="btn-character-clear" class="tool-btn">🗑️ Limpar</button>
+        </div>
+
+        <button type="button" id="btn-character-save" class="btn btn-primary character-save-btn">💾 Salvar personagem</button>
+        <p id="character-save-msg" class="character-save-msg"></p>
+      </div>
     </div>
     </div>
   </div>

@@ -58,6 +58,166 @@ function currentName() {
   return v || `Jogador${Math.floor(Math.random() * 900 + 100)}`;
 }
 
+// ------------------------------------------------------------------
+// PAINEL: CRIAR PERSONAGEM (desenhar em cima do boneco)
+// ------------------------------------------------------------------
+(function initCharacterEditor() {
+  const canvas = document.getElementById('character-canvas');
+  if (!canvas) return; // painel não presente nesta tela/versão
+
+  const ctx = canvas.getContext('2d');
+  const colorPicker = document.getElementById('character-color-picker');
+  const brushSizeInput = document.getElementById('character-brush-size');
+  const btnPen = document.getElementById('btn-tool-pen');
+  const btnEraser = document.getElementById('btn-tool-eraser');
+  const btnUndo = document.getElementById('btn-character-undo');
+  const btnClear = document.getElementById('btn-character-clear');
+  const btnSave = document.getElementById('btn-character-save');
+  const saveMsg = document.getElementById('character-save-msg');
+
+  let drawing = false;
+  let currentColor = colorPicker.value;
+  let currentTool = 'pen'; // 'pen' | 'eraser'
+  let lastX = 0, lastY = 0;
+  const undoStack = [];
+
+  function pushUndoState() {
+    undoStack.push(canvas.toDataURL());
+    if (undoStack.length > 20) undoStack.shift();
+  }
+
+  function pointerPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX);
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY);
+    return {
+      x: (cx - rect.left) * (canvas.width / rect.width),
+      y: (cy - rect.top) * (canvas.height / rect.height)
+    };
+  }
+
+  function startDraw(e) {
+    e.preventDefault();
+    drawing = true;
+    pushUndoState();
+    const p = pointerPos(e);
+    lastX = p.x; lastY = p.y;
+    drawDot(p.x, p.y);
+  }
+
+  function drawDot(x, y) {
+    ctx.globalCompositeOperation = currentTool === 'eraser' ? 'destination-out' : 'source-over';
+    ctx.fillStyle = currentColor;
+    ctx.beginPath();
+    ctx.arc(x, y, Number(brushSizeInput.value) / 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function moveDraw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const p = pointerPos(e);
+    ctx.globalCompositeOperation = currentTool === 'eraser' ? 'destination-out' : 'source-over';
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = Number(brushSizeInput.value);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  }
+
+  function endDraw() { drawing = false; }
+
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', moveDraw);
+  window.addEventListener('mouseup', endDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove', moveDraw, { passive: false });
+  canvas.addEventListener('touchend', endDraw);
+
+  document.querySelectorAll('.color-swatch').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentColor = btn.dataset.color;
+      colorPicker.value = currentColor;
+      currentTool = 'pen';
+      btnPen.classList.add('active');
+      btnEraser.classList.remove('active');
+    });
+  });
+
+  colorPicker.addEventListener('input', () => {
+    currentColor = colorPicker.value;
+    document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
+    currentTool = 'pen';
+    btnPen.classList.add('active');
+    btnEraser.classList.remove('active');
+  });
+
+  btnPen.addEventListener('click', () => {
+    currentTool = 'pen';
+    btnPen.classList.add('active');
+    btnEraser.classList.remove('active');
+  });
+
+  btnEraser.addEventListener('click', () => {
+    currentTool = 'eraser';
+    btnEraser.classList.add('active');
+    btnPen.classList.remove('active');
+  });
+
+  btnUndo.addEventListener('click', () => {
+    if (!undoStack.length) return;
+    const last = undoStack.pop();
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.src = last;
+  });
+
+  btnClear.addEventListener('click', () => {
+    pushUndoState();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+
+  btnSave.addEventListener('click', () => {
+    // Junta o boneco base + o desenho num único PNG.
+    const merged = document.createElement('canvas');
+    merged.width = canvas.width;
+    merged.height = canvas.height;
+    const mctx = merged.getContext('2d');
+    const baseImg = document.getElementById('character-base');
+    mctx.drawImage(baseImg, 0, 0, merged.width, merged.height);
+    mctx.drawImage(canvas, 0, 0);
+    const dataUrl = merged.toDataURL('image/png');
+
+    try {
+      localStorage.setItem('trutec_meu_personagem', dataUrl);
+    } catch (e) {
+      console.warn('Não foi possível salvar no localStorage:', e);
+    }
+
+    saveMsg.textContent = 'Personagem salvo! ✅';
+    setTimeout(() => { saveMsg.textContent = ''; }, 2500);
+  });
+
+  // Carrega um personagem salvo anteriormente, se existir.
+  try {
+    const saved = localStorage.getItem('trutec_meu_personagem');
+    if (saved) {
+      // Só restaura a camada de desenho por cima do boneco base atual,
+      // então deixamos o canvas limpo e mostramos o resultado salvo como referência.
+      saveMsg.textContent = 'Você já tem um personagem salvo.';
+    }
+  } catch (e) { /* localStorage indisponível, ignora */ }
+})();
+
 function lobbyError(msg) {
   document.getElementById('lobby-error').textContent = msg || '';
 }
