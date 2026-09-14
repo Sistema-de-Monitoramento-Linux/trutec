@@ -89,6 +89,15 @@ function buildDeck() {
   return deck;
 }
 
+// Personagem é um PNG (dataURL) desenhado no cliente. Validação simples pra
+// evitar lixo/abuso: só aceita dataURL de PNG e limita o tamanho.
+function sanitizeCharacter(character) {
+  if (typeof character !== 'string') return null;
+  if (!character.startsWith('data:image/png;base64,')) return null;
+  if (character.length > 400000) return null; // ~300KB, generoso pra um canvas 500x500
+  return character;
+}
+
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -173,7 +182,7 @@ class Room {
       maxPlayers: this.maxPlayers,
       started: this.started,
       players: this.players.map(p => ({
-        seat: p.seat, name: p.name, team: p.team, connected: p.connected
+        seat: p.seat, name: p.name, team: p.team, connected: p.connected, character: p.character || null
       }))
     };
   }
@@ -433,13 +442,13 @@ io.on('connection', (socket) => {
     return currentRoomCode ? rooms.get(currentRoomCode) : null;
   }
 
-  socket.on('create_room', ({ name, mode, isPublic }, cb) => {
+  socket.on('create_room', ({ name, mode, isPublic, character }, cb) => {
     try {
       mode = mode === '2v2' ? '2v2' : '1v1';
       const code = genRoomCode();
       const r = new Room(code, mode, !!isPublic, name);
       rooms.set(code, r);
-      joinRoomInternal(r, socket, name || 'Jogador');
+      joinRoomInternal(r, socket, name || 'Jogador', character);
       currentRoomCode = code;
       cb && cb({ ok: true, code });
       io.to(code).emit('lobby_update', r.lobbyState());
@@ -448,14 +457,14 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('join_room', ({ code, name }, cb) => {
+  socket.on('join_room', ({ code, name, character }, cb) => {
     code = (code || '').toUpperCase().trim();
     const r = rooms.get(code);
     if (!r) return cb && cb({ ok: false, error: 'Sala não encontrada.' });
     if (r.players.length >= r.maxPlayers) return cb && cb({ ok: false, error: 'Sala cheia.' });
     if (r.started) return cb && cb({ ok: false, error: 'Partida já começou.' });
 
-    joinRoomInternal(r, socket, name || 'Jogador');
+    joinRoomInternal(r, socket, name || 'Jogador', character);
     currentRoomCode = code;
     cb && cb({ ok: true, code });
     io.to(code).emit('lobby_update', r.lobbyState());
@@ -467,6 +476,15 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('update_character', ({ character }) => {
+    const r = room();
+    if (!r) return;
+    const player = r.playerBySocket(socket.id);
+    if (!player) return;
+    player.character = sanitizeCharacter(character);
+    io.to(r.code).emit('lobby_update', r.lobbyState());
+  });
+
   socket.on('list_public_rooms', (cb) => {
     const list = Array.from(rooms.values())
       .filter(r => r.isPublic && !r.started && r.players.length < r.maxPlayers)
@@ -474,7 +492,7 @@ io.on('connection', (socket) => {
     cb && cb(list);
   });
 
-  socket.on('quick_join', ({ name, mode }, cb) => {
+  socket.on('quick_join', ({ name, mode, character }, cb) => {
     mode = mode === '2v2' ? '2v2' : '1v1';
     let r = Array.from(rooms.values()).find(
       x => x.isPublic && !x.started && x.mode === mode && x.players.length < x.maxPlayers
@@ -484,7 +502,7 @@ io.on('connection', (socket) => {
       r = new Room(code, mode, true, name);
       rooms.set(code, r);
     }
-    joinRoomInternal(r, socket, name || 'Jogador');
+    joinRoomInternal(r, socket, name || 'Jogador', character);
     currentRoomCode = r.code;
     cb && cb({ ok: true, code: r.code });
     io.to(r.code).emit('lobby_update', r.lobbyState());
@@ -496,10 +514,10 @@ io.on('connection', (socket) => {
     }
   });
 
-  function joinRoomInternal(r, socket, name) {
+  function joinRoomInternal(r, socket, name, character) {
     const seat = r.players.length;
     const team = r.seatTeam(seat);
-    r.players.push({ id: socket.id, name, seat, team, connected: true, hand: [] });
+    r.players.push({ id: socket.id, name, seat, team, connected: true, hand: [], character: sanitizeCharacter(character) });
     socket.join(r.code);
   }
 
