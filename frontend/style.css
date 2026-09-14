@@ -1030,47 +1030,34 @@ button { font-family: inherit; cursor: pointer; }
   transform: rotateX(72deg) translateZ(4px) scale(0.92);
   transform-origin: 50% 100%;
 }
-.seat-top .opp-hand .card-back:nth-child(1) { transform: rotateX(72deg) rotateZ(-5deg) translateZ(4px) scale(0.92); }
-.seat-top .opp-hand .card-back:nth-child(3) { transform: rotateX(72deg) rotateZ(5deg) translateZ(4px) scale(0.92); }
 
 /* Esquerda e direita são dupla um do outro: a mão de quem tá à esquerda
    descansa deitada apontando pro lado da direita (onde tá o parceiro
    dele), e vice-versa — em vez de ficar "olhando" pra você. */
 .seat-left .opp-hand .card-back {
-  transform: rotateY(-68deg) rotateZ(-16deg) translateZ(4px) scale(0.92);
+  transform: rotateY(-68deg) rotateZ(-14deg) translateZ(4px) scale(0.92);
   transform-origin: 100% 50%;
 }
-.seat-left .opp-hand .card-back:nth-child(1) { transform: rotateY(-68deg) rotateZ(-22deg) translateZ(4px) scale(0.92); }
-.seat-left .opp-hand .card-back:nth-child(3) { transform: rotateY(-68deg) rotateZ(-10deg) translateZ(4px) scale(0.92); }
 
 .seat-right .opp-hand .card-back {
-  transform: rotateY(68deg) rotateZ(16deg) translateZ(4px) scale(0.92);
+  transform: rotateY(68deg) rotateZ(14deg) translateZ(4px) scale(0.92);
   transform-origin: 0% 50%;
 }
-.seat-right .opp-hand .card-back:nth-child(1) { transform: rotateY(68deg) rotateZ(22deg) translateZ(4px) scale(0.92); }
-.seat-right .opp-hand .card-back:nth-child(3) { transform: rotateY(68deg) rotateZ(10deg) translateZ(4px) scale(0.92); }
 
 /* Quando é a vez do jogador, a mão "levanta" da mesa: em vez de ficar
    achatada de frente pra câmera, as cartas ficam de pé, de ladinho —
-   como um legue segurado na mão, cada uma com uma leve inclinação
-   diferente (fan), igual à sua própria mão embaixo. */
+   como um leque segurado na mão. */
 .seat-top .opp-hand.active-turn .card-back {
   transform: rotateX(10deg) rotateY(0deg) translateY(-12px) translateZ(12px) scale(1.1);
 }
-.seat-top .opp-hand.active-turn .card-back:nth-child(1) { transform: rotateX(10deg) rotateY(-16deg) translateY(-8px) translateZ(12px) scale(1.06); }
-.seat-top .opp-hand.active-turn .card-back:nth-child(3) { transform: rotateX(10deg) rotateY(16deg) translateY(-8px) translateZ(12px) scale(1.06); }
 
 .seat-left .opp-hand.active-turn .card-back {
   transform: rotateX(6deg) rotateY(-26deg) translateY(-12px) translateZ(12px) scale(1.1);
 }
-.seat-left .opp-hand.active-turn .card-back:nth-child(1) { transform: rotateX(6deg) rotateY(-38deg) translateY(-8px) translateZ(12px) scale(1.06); }
-.seat-left .opp-hand.active-turn .card-back:nth-child(3) { transform: rotateX(6deg) rotateY(-14deg) translateY(-8px) translateZ(12px) scale(1.06); }
 
 .seat-right .opp-hand.active-turn .card-back {
   transform: rotateX(6deg) rotateY(26deg) translateY(-12px) translateZ(12px) scale(1.1);
 }
-.seat-right .opp-hand.active-turn .card-back:nth-child(1) { transform: rotateX(6deg) rotateY(38deg) translateY(-8px) translateZ(12px) scale(1.06); }
-.seat-right .opp-hand.active-turn .card-back:nth-child(3) { transform: rotateX(6deg) rotateY(14deg) translateY(-8px) translateZ(12px) scale(1.06); }
 
 .seat-top .opp-hand.active-turn .card-back,
 .seat-left .opp-hand.active-turn .card-back,
